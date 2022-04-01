@@ -1,5 +1,5 @@
 <?php
-require_once("config/Config.php");
+require_once("Config/Config.php");
 
 # Se obtiene la url
 $route = !empty($_GET['route']) ? $_GET['route'] : 'home/home';
@@ -35,32 +35,5 @@ if (!empty($arrayRoute[2]) && $arrayRoute[2] != "") {
     $params = trim($params, ',');
 }
 
-# Carga automaticamente los controladores
-spl_autoload_register(function ($class) {
-    $filename = LIBRARIES.'core/'.$class.'.php';
-    if (file_exists($filename)) {
-        require_once($filename);
-    }
-});
-
-# Load
-$controllerFile = "controllers/".$controller.".php";
-# Valida si el archivo controlador existe
-if (file_exists($controllerFile)) {
-
-    # Se importa el archivo
-    require_once($controllerFile);
-    # Se instancia la clase del contorlador
-    $controller = new $controller();
-
-    # Se valida si el metodo de la url existe en el controlodar
-    if (method_exists($controller, $method)) {
-        # Se llama al metodo con los parametros de la url
-        $controller->{$method}($params);
-    }else {
-        echo "Method not found.";
-    }
-
-} else {
-    echo "Controller file not found.";
-}
+require_once('Libraries/Core/Autoload.php');
+require_once('Libraries/Core/Load.php');

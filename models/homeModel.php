@@ -1,7 +1,9 @@
 <?php
 
-class homeModel {
-    function __construct() {
+class homeModel
+{
+    function __construct()
+    {
 
     }
 }
