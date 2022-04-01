@@ -1,5 +1,6 @@
 <?php
 require_once("Config/Config.php");
+require_once("Helpers/Helpers.php");
 
 # Se obtiene la url
 $route = !empty($_GET['route']) ? $_GET['route'] : 'home/home';
