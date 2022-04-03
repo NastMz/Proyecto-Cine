@@ -1,6 +1,6 @@
 <?php
 
-class homeModel extends Database
+class homeModel extends Crud
 {
     function __construct()
     {

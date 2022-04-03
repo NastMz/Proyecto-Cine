@@ -11,7 +11,11 @@ class NotFound extends Controllers
 
     public function notFound()
     {
-        $this->views->getView($this, "not_found");
+        $data['page_tag'] = "Not Found";
+        $data['page_title'] = "Not Found";
+        $data['page_name'] = "not_found";
+        $data['page_id'] = 404;
+        $this->views->getView($this, "not_found", $data);
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-class Database extends Connection
+class Crud extends Connection
 {
     private $connection;
     private $query;
