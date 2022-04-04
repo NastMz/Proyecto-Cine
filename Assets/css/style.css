@@ -1,14 +1,35 @@
+:root {
+    --main-blue-color: #1c508d;
+    --secondary-blue-color: #0076ff;
+    --black: #212529;
+    --white: #fff;
+    --red: #dc3545;
+    --green: #28a745;
+    --blue: #007bff;
+    --yellow: #ffc107;
+    --cian: #17a2b8;
+    --dark: #343a40;
+    --red-hover: #c82333;
+    --green-hover: #218838;
+    --blue-hover: #0069d9;
+    --yellow-hover: #e0a800;
+    --cian-hover: #138496;
+    --dark-hover: #23272b;
+    --box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+    --box-shadow-hover: 0 0 10px rgb(0 0 0 / 30%);
+}
+
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box
+    box-sizing: border-box;
+    font-family:'Roboto', BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body {
     text-rendering: optimizeLegibility !important;
     -webkit-font-smoothing: antialiased !important;
     line-height: 1.5;
-    font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 1em;
     font-weight: 400;
     letter-spacing: .45px;
@@ -18,8 +39,8 @@ body {
 
 .header-bar {
     height: 5em;
-    background-color: #000;
-    color: #fff;
+    background-color: var(--black);
+    color: var(--white);
     display: flex;
     justify-content: center;
     align-items: stretch;
@@ -96,19 +117,19 @@ body {
     line-height: 1;
     cursor: pointer;
     align-items: center;
-    background-color: #1c508d;
+    background-color: var(--main-blue-color);
     padding: .65rem 1rem;
     margin-right: 1em;
     font-size: .75em;
     border: none;
-    color: #fff;
+    color: var(--white);
     text-align: center;
     font-weight: 400;
 }
 
 .nav-tabs a:hover {
-    box-shadow: 0 0 10px 0 rgb(0 0 0 / 15%);
-    background-color: #0076ff;
+    box-shadow: var(--box-shadow);
+    background-color: var(--secondary-blue-color);
 }
 
 @media screen and (max-width: 520px) {
@@ -145,7 +166,7 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    color: #fff;
+    color: var(--white);
 }
 
 .user-image .fa-caret-down {
@@ -155,7 +176,7 @@ body {
     height: auto;
     padding: .275rem .5rem;
     font-size: 1rem;
-    background-color: #1c508d;
+    background-color: var(--main-blue-color);
     border-top-left-radius: .625rem;
     border-bottom-left-radius: .625rem;
     cursor: pointer;
@@ -173,7 +194,6 @@ body {
     outline: 0;
     width: 2.25rem;
     height: 2.25rem;
-    background-color: #06162f;
     padding: 0;
     line-height: 1;
     border-radius: 50%;
@@ -182,7 +202,7 @@ body {
 }
 
 .user-image:hover .fa-caret-down {
-    background-color: #0076ff;
+    background-color: var(--secondary-blue-color);
 }
 
 .user-image:hover .fa-user {
@@ -213,8 +233,8 @@ body {
     margin-top: 2em;
     right: 5px;
     position: absolute;
-    background-color: #fff;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    background-color: var(--white);
+    box-shadow: var(--box-shadow);
     z-index: 1;
     font-size: 0.8em;
     transition: all .3s ease-in-out;
@@ -247,7 +267,7 @@ body {
     grid-template-columns: repeat(4, 1fr);
     grid-column-gap: 20px;
     grid-row-gap: 20px;
-    background-color: #fff;
+    background-color: var(--white);
     padding: 2rem 1.625rem;
 }
 
@@ -256,9 +276,9 @@ body {
     height: fit-content;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+    box-shadow: var(--box-shadow);
     border-radius: 6px;
-    color: #000;
+    color: var(--black);
     padding: .9375rem 1.0625rem;
 }
 
@@ -275,7 +295,7 @@ body {
 }
 
 .movie-card:hover {
-    box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+    box-shadow: var(--box-shadow-hover);
 }
 
 .movie-card:hover img {
@@ -314,7 +334,7 @@ body {
 .movie-item_meta {
     align-items: center;
     font-size: .75rem;
-    color: #000;
+    color: var(--black);
     width: 100%;
 }
 
@@ -329,7 +349,7 @@ body {
     font-weight: 500;
     padding: .3125rem .625rem;
     background-color: #eaeaea;
-    color: #000;
+    color: var(--black);
     letter-spacing: .17px;
 }
 
@@ -350,15 +370,15 @@ body {
     cursor: pointer;
     font-size: 1em;
     background-color: transparent;
-    border-color: #1c508d;
-    color: #1c508d;
+    border-color: var(--main-blue-color);
+    color: var(--main-blue-color);
     transition: all .3s ease-in-out;
 }
 
 .button-primary:hover {
-    background-color: #1c508d;
-    border-color: #1c508d;
-    color: #fff;
+    background-color: var(--main-blue-color);
+    border-color: var(--main-blue-color);
+    color: var(--white);
 }
 
 /*******************Estilos del footer*******************/
@@ -477,7 +497,7 @@ footer span {
     align-items: center;
     min-height: 60vh;
     text-align: center;
-    color: #000;
+    color: var(--black);
     padding-bottom: .75rem;
     padding-top: 2.375rem;
     margin-top: 0;
@@ -493,7 +513,7 @@ footer span {
 .section_title {
     line-height: 1;
     margin-bottom: 1.125rem;
-    color: #1c508d;
+    color: var(--main-blue-color);
     font-size: 12.5em;
     font-weight: 500;
     text-align: center;
@@ -517,7 +537,7 @@ footer span {
 
 .links-list a {
     transition: all .3s ease-in-out;
-    color: #1c508d;
+    color: var(--main-blue-color);
 }
 
 .links-list a:hover {
@@ -563,9 +583,9 @@ footer span {
     font-weight: lighter;
     margin: 10px;
     padding: 20px;
-    box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+    box-shadow: var(--box-shadow-hover);
     border-radius: 6px;
-    color: #585f73;
+    color: var(--dark);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -594,28 +614,33 @@ footer span {
     height: 500px;
     margin: 10px;
     padding: 20px;
-    box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+    box-shadow: var(--box-shadow-hover);
     border-radius: 6px;
 }
 
-.btn-primary {
+.btn {
     user-select: none;
     height: auto;
     line-height: 1;
     font-weight: 500;
     cursor: pointer;
-    padding: .75rem 0.75rem;
+    padding: .75em 0.75em;
     border-radius: 0.5em;
     font-size: 0.75em;
-    margin: 5px 0 0 10px;
-    color: #fff;
+    color: var(--white);
     transition: all .3s ease-in-out;
-    background-color: #1c508d;
+    border: none;
+    box-shadow: var(--box-shadow);
+    margin: 0.25em;
+}
+
+.btn-primary {
+    background-color: var(--blue);
     border: none;
 }
 
 .btn-primary:hover {
-    background-color: #0076ff;
+    background-color: var(--blue-hover);
 }
 
 /*******************Estilos del Modales*******************/
@@ -636,22 +661,22 @@ footer span {
 
 /* Modal Content/Box */
 .modal-content {
-    margin: 10% auto; /* 15% from the top and centered */
-    width: 350px; /* Could be more or less, depending on screen size */
+    margin: 20px auto; /* 15% from the top and centered */
+    width: 90%; /* Could be more or less, depending on screen size */
     height: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgb(0 0 0 / 20%);
-    background-color: #1c508d;
+    box-shadow: var(--box-shadow);
+    background-color: var(--main-blue-color);
 }
 
 /* The Close Button */
 
 .close-button, .form-footer {
-    background-color: #1c508d;
+    background-color: var(--main-blue-color);
     width: 100%;
     position: relative;
     padding: 1.25rem 2rem;
@@ -672,7 +697,7 @@ footer span {
 }
 
 .close {
-    color: #fff;
+    color: var(--white);
     font-size: 1.5em;
     font-weight: bold;
     border-radius: 50%;
@@ -686,19 +711,19 @@ footer span {
 
 .close:hover,
 .close:focus {
-    color: #dc3545;
+    color: var(--red);
 }
 
 .form{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    background-color: #fff;
+    background-color: var(--white);
     width: 100%;
     border-radius: 4px;
     z-index: 1;
     min-height: 250px;
-    padding: .25rem 1rem;
+    padding: .25em 1.5em;
 }
 
 .form-group {
@@ -706,7 +731,7 @@ footer span {
 }
 
 .form-title {
-    color: #fff;
+    color: var(--white);
     margin-bottom: .25rem;
     font-weight: 500;
     text-align: center;
@@ -741,12 +766,13 @@ footer span {
     width: 100%;
     padding: .75rem 1.375rem;
     background-color: #dbe2f1;
-    color: #1c508d;
+    color: var(--main-blue-color);
     border-radius: 8px;
     font-size: .875rem;
     line-height: 1rem;
     height: auto;
     border: 2px solid transparent;
+    margin-bottom: .75rem;
 }
 
 textarea {
@@ -754,16 +780,51 @@ textarea {
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #1c508d;
+    color: var(--main-blue-color);
     opacity: 1; /* Firefox */
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: #1c508d;
+    color: var(--main-blue-color);
 }
 
 ::-ms-input-placeholder { /* Microsoft Edge */
-    color: #1c508d;
+    color: var(--main-blue-color);
+}
+
+.field-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 1em;
+}
+
+.form-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .25rem 1rem;
+}
+
+.btn-submit {
+    user-select: none;
+    height: auto;
+    padding: .75rem 1.375rem;
+    border-radius: 1.5em;
+    line-height: 1;
+    font-weight: 500;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    background-color: var(--main-blue-color);
+    color: var(--white);
+}
+
+.btn-submit:hover {
+    background-color: var(--secondary-blue-color);
+}
+
+.alert {
+    color: var(--red);
 }
 
 /*******************Estilos del Sidebar*******************/
@@ -776,7 +837,7 @@ textarea {
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
-    background-color: black; /* Black*/
+    background-color: var(--black); /* Black*/
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 2em; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
@@ -790,7 +851,7 @@ textarea {
     margin: 1px;
     text-decoration: none;
     font-size: .9375rem;
-    color: #fff;
+    color: var(--white);
     display: block;
     transition: all .3s ease-in-out;
     width: 90%;
@@ -803,8 +864,8 @@ textarea {
 /* When you mouse over the navigation links, change their color */
 .option:hover {
     border-radius: 100px;
-    background-color: #fff;
-    color: #000;
+    background-color: var(--white);
+    color: var(--black);
 }
 
 .close-icon {
@@ -817,15 +878,15 @@ textarea {
     position: absolute;
     right: 25px;
     margin-left: 50px;
-    border: 1px solid #fff;
+    border: 1px solid var(--white);
     border-radius: 1.75em;
     padding: .05rem .45em;
-    color: #fff;
+    color: var(--white);
 }
 
 .sidenav .closebtn:hover {
-    background-color: #fff;
-    color: #000;
+    background-color: var(--white);
+    color: var(--black);
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
@@ -870,22 +931,22 @@ textarea {
 
 .title-users {
     background-color: #fbf067;
-    color: #000;
+    color: var(--black);
 }
 
 .title-movies {
     background-color: #8ad000;
-    color: #000;
+    color: var(--black);
 }
 
 .title-cinema {
     background-color: #facb65;
-    color: #000;
+    color: var(--black);
 }
 
 .title-others {
     background-color: #9acbfc;
-    color: #000;
+    color: var(--black);
 }
 
 /* ===== Scrollbar CSS ===== */
@@ -907,4 +968,91 @@ textarea {
 *::-webkit-scrollbar-thumb {
     background-color: #646464;
     border-radius: 10px;
+}
+
+/*******************Estilos de las tablas de datos*******************/
+
+.table-data{
+    padding: 10px;
+    width: 100%;
+    margin: auto;
+    overflow-x: auto;
+    font-size: 1.15em;
+    border-radius: 6px;
+    text-align: center;
+}
+
+
+
+table{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    letter-spacing: 1px;
+}
+
+td, th{
+    padding: 0.25em;
+}
+
+table tr:nth-child(even){
+    background-color: #ddd;
+}
+
+thead {
+    text-transform: uppercase;
+    background-color: var(--main-blue-color);
+    color: white;
+}
+
+tfoot {
+    background-color: var(--main-blue-color);
+}
+
+thead th, tfoot td {
+    padding: 0.5em;
+}
+
+tbody tr:hover{
+    background-color: var(--cian);
+    color: white;
+}
+
+.btn-edit {
+    background-color: var(--yellow);
+    color: var(--black);
+}
+
+.btn-edit:hover {
+    background-color: var(--yellow-hover);
+}
+
+.btn-delete {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+.btn-delete:hover {
+    background-color: var(--red-hover);
+}
+
+.status {
+    width: fit-content;
+    margin: auto;
+    padding: 0.2em;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
+    font-size: 0.7em;
+}
+
+.status-active {
+    background-color: var(--green);
 }

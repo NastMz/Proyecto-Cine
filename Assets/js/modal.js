@@ -1,5 +1,5 @@
 // Get the modal
-let modal = "";
+let modal = document.getElementById("modal");
 
 // Get the button that opens the modal
 let btn = document.getElementById("open-modal");
@@ -8,16 +8,14 @@ let btn = document.getElementById("open-modal");
 let span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on the button, open the modal
-function openModal(modalId) {
-    modal = document.getElementById(modalId);
+function openModal() {
     setTimeout(() => {
         modal.style.display = "block";
     }, 100);
 }
 
 // When the user clicks on <span> (x), close the modal
-function closeModal(modalId) {
-    modal = document.getElementById(modalId);
+function closeModal() {
     setTimeout(() => {
         modal.style.display = "none";
     }, 100);

@@ -61,7 +61,7 @@
 </footer>
 <script src="<?= media() ?>js/sidebar.js"></script>
 <script src="<?= media() ?>js/dropdown.js"></script>
-<script src="<?= media() ?>js/functions_roles.js"></script>
+<script src="<?= media() ?>js/modal.js"></script>
 <script src="<?= media() ?>js/functions_admin.js"></script>
 <script src="https://kit.fontawesome.com/f0f6bc91a0.js" crossorigin="anonymous"></script>
 </body>

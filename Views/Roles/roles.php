@@ -26,7 +26,7 @@ getModal("modalRoles", $data);
             <div class="content">
                 <div class="head-bar">
                     <!-- Trigger/Open The Modal -->
-                    <button id="open-modal" class="btn-primary" onclick="openModal('modalRoles')">
+                    <button id="open-modal" class="btn btn-primary" onclick="openModal('modalRoles')">
                         <i class="fa fa-plus"></i> Nuevo
                     </button>
                 </div>
