@@ -69,8 +69,7 @@ class Crud extends Connection
         $this->query = $query;
 
         $result = $this->connection->prepare($this->query);
-        $result->execute();
 
-        return $$result;
+        return $result->execute();
     }
 }

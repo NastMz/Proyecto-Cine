@@ -99,7 +99,7 @@
                     <div class="dropdown">
                         <button class="dropbtn">
                             <div class="user-image">
-                                <i class="fa fa-caret-down"></i>
+                                <i class="fa fa-caret-up"></i>
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </div>
                         </button>

@@ -23,7 +23,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family:'Roboto', BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body {
@@ -169,7 +169,7 @@ body {
     color: var(--white);
 }
 
-.user-image .fa-caret-down {
+.user-image .fa-caret-up {
     transition: all .3s ease-in-out;
     position: relative;
     width: auto;
@@ -201,11 +201,13 @@ body {
 
 }
 
-.user-image:hover .fa-caret-down {
+.dropdown:hover .dropbtn .fa-caret-up {
     background-color: var(--secondary-blue-color);
+    border-radius: 0 .625rem .625rem 0;
+    transform: rotate(180deg);
 }
 
-.user-image:hover .fa-user {
+.dropdown:hover .dropbtn .fa-user {
     border: 6px solid #0076ff;
 }
 
@@ -591,9 +593,25 @@ footer span {
     align-items: center;
 }
 
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .title-page h1 {
     display: flex;
     align-items: center;
+}
+
+@media screen and (max-width: 750px) {
+    .title-page h1 {
+        font-size: 1.25em;
+    }
+
+    .breadcrumb {
+        font-size: 1em;
+    }
 }
 
 .title-page span {
@@ -611,7 +629,7 @@ footer span {
 }
 
 .content {
-    height: 500px;
+    height: fit-content;
     margin: 10px;
     padding: 20px;
     box-shadow: var(--box-shadow-hover);
@@ -620,7 +638,7 @@ footer span {
 
 .btn {
     user-select: none;
-    height: auto;
+    height: fit-content;
     line-height: 1;
     font-weight: 500;
     cursor: pointer;
@@ -655,8 +673,8 @@ footer span {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
@@ -714,7 +732,7 @@ footer span {
     color: var(--red);
 }
 
-.form{
+.form {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -798,7 +816,7 @@ textarea {
     grid-column-gap: 1em;
 }
 
-.form-button{
+.form-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -858,7 +876,7 @@ textarea {
 }
 
 .option:last-child {
-    margin-bottom:  50px;
+    margin-bottom: 50px;
 }
 
 /* When you mouse over the navigation links, change their color */
@@ -972,19 +990,58 @@ textarea {
 
 /*******************Estilos de las tablas de datos*******************/
 
-.table-data{
+.head-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.registers, .search-bar {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: fit-content;
+    width: fit-content;
+}
+
+.registers .label, .registers .input {
+    margin: 2px;
+    padding: 0;
+    height: fit-content;
+    width: fit-content;
+}
+
+.search-bar .input {
+    margin: 2px;
+}
+
+.search-bar .label {
+    margin: 2px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table-data {
     padding: 10px;
     width: 100%;
+    height: fit-content;
     margin: auto;
     overflow-x: auto;
-    font-size: 1.15em;
+    font-size: 1em;
     border-radius: 6px;
     text-align: center;
 }
 
+@media screen and (max-width: 750px) {
+    .table-data {
+        font-size: 0.9em;
+        padding: 5px;
+    }
+}
 
-
-table{
+table {
     width: 100%;
     margin: 0;
     padding: 0;
@@ -996,11 +1053,11 @@ table{
     letter-spacing: 1px;
 }
 
-td, th{
+td, th {
     padding: 0.25em;
 }
 
-table tr:nth-child(even){
+table tr:nth-child(even) {
     background-color: #ddd;
 }
 
@@ -1018,7 +1075,7 @@ thead th, tfoot td {
     padding: 0.5em;
 }
 
-tbody tr:hover{
+tbody tr:hover {
     background-color: var(--cian);
     color: white;
 }
@@ -1055,4 +1112,37 @@ tbody tr:hover{
 
 .status-active {
     background-color: var(--green);
+}
+
+.status-inactive {
+    background-color: var(--red);
+}
+
+.pagination {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Pagination links */
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border-radius: 6px;
+}
+
+
+/* Style the active/current link */
+.pagination a.active {
+    background-color: var(--main-blue-color);
+    color: var(--white);
+}
+
+/* Add a grey background color on mouse-over */
+.pagination a:hover:not(.active) {
+    background-color:  #ddd;
 }

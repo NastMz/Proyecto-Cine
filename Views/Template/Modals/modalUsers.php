@@ -13,7 +13,7 @@
         </div>
         <div class="form">
             <div class="form-group">
-                <form id="formUser" name="formUser">
+                <form id="formUser" name="formUser" method="post">
                     <div class="field-group">
                         <div class="field">
                             <label for="txtUserName" class="label">
@@ -78,7 +78,7 @@
                         *Todos los campos son obligatorios
                     </span>
                     <div class="form-button">
-                        <button id="btnActionForm" type="submit" class="btn btn-submit">
+                        <button id="btnActionForm" type="submit" class="btn btn-submit" onclick="sendRequest()">
                             Guardar
                         </button>
                     </div>

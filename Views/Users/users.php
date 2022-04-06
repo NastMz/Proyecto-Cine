@@ -6,9 +6,14 @@ getModal("modalUsers", $data);
     <main>
         <div class="container-dashboard">
             <div class="title-page">
-                <h1>
-                    <i class="fa fa-user-group"></i> <?= $data['page_title'] ?>
-                </h1>
+                <div class="title">
+                    <h1>
+                        <i class="fa fa-user-group"></i> <?= $data['page_title'] ?>
+                    </h1>
+                    <button id="open-modal" class="btn btn-primary" onclick="openModal()">
+                        <i class="fa fa-plus"></i> Nuevo
+                    </button>
+                </div>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="<?= base_url() ?>dashboard">
@@ -25,10 +30,19 @@ getModal("modalUsers", $data);
             </div>
             <div class="content">
                 <div class="head-bar">
-                    <!-- Trigger/Open The Modal -->
-                    <button id="open-modal" class="btn btn-primary" onclick="openModal()">
-                        <i class="fa fa-plus"></i> Nuevo
-                    </button>
+                    <div class="registers">
+                        <label for="numRegisters" class="label">Mostrar:</label>
+                        <select id="numRegisters" name="numRegisters" class="input" >
+                            <option value="10">10</option>
+                            <option value="20">25</option>
+                            <option value="30">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="search-bar">
+                        <label for="search" class="label">Buscar:</label>
+                        <input id="search" name="search" type="text" class="input"/>
+                    </div>
                 </div>
 
                 <div class="table-data">
@@ -37,7 +51,6 @@ getModal("modalUsers", $data);
                         <tr>
                             <th>ID</th>
                             <th>NOMBRE</th>
-                            <th>APELLIDO</th>
                             <th>EMAIL</th>
                             <th>TELEFONO</th>
                             <th>ROL</th>
@@ -45,24 +58,8 @@ getModal("modalUsers", $data);
                             <th>ACCIONES</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td data-label="userCode">1007590327</td>
-                            <td data-label="userName">Kevin</td>
-                            <td data-label="userLastname">Martinez</td>
-                            <td data-label="userEmail">ksmartinez@gmail.com</td>
-                            <td data-label="userPhone">31458956</td>
-                            <td data-label="userRole">Cliente</td>
-                            <td data-label="status" ><span class="status status-active">Activo</span></td>
-                            <td>
-                                <button id="open-modal" class="btn btn-edit" onclick="openModal('modalUsers')">
-                                    <i class="fa-regular fa-pen-to-square"></i> Editar
-                                </button>
-                                <button id="open-modal" class="btn btn-delete">
-                                    <i class="fa-regular fa-trash-can"></i> Eliminar
-                                </button>
-                            </td>
-                        </tr>
+                        <tbody id="tableUsersBody">
+
                         </tbody>
                         <tfoot>
                         <tr>
@@ -70,6 +67,16 @@ getModal("modalUsers", $data);
                         </tr>
                         </tfoot>
                     </table>
+                </div>
+                <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <a class="active" href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">6</a>
+                    <a href="#">&raquo;</a>
                 </div>
             </div>
         </div>
