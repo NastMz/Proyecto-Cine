@@ -97,13 +97,14 @@
             <div class="profile">
                 <div class="user">
                     <div class="dropdown">
-                        <button class="dropbtn">
+                        <button onclick="openDropdown()" class="dropbtn">
                             <div class="user-image">
-                                <i class="fa fa-caret-up"></i>
-                                <i class="fa fa-user" aria-hidden="true"></i>
+                                <span class="caretBtn"><i class="fa fa-caret-up" id="dropbtn"></i></span>
+                                <span class="user-icon"><i class="fa fa-user" aria-hidden="true"
+                                                           id="user-image"></i></span>
                             </div>
                         </button>
-                        <div class="dropdown-content">
+                        <div id="myDropdown" class="dropdown-content">
                             <a href="<?= base_url() ?>settings">
                                 <i class="fa fa-cogs" aria-hidden="true"></i> Configuración
                             </a>
@@ -115,7 +116,6 @@
                             </a>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

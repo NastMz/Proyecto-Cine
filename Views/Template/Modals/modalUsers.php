@@ -34,14 +34,14 @@
                                 Documento<span class="alert">*</span>:
                             </label>
                             <input type="text" name="txtUserId" id="txtUserId" placeholder="Documento del usuario"
-                                   class="input" />
+                                   class="input" maxlength="10"/>
                         </div>
                         <div class="field">
                             <label for="txtPhone" class="label">
                                 Teléfono<span class="alert">*</span>:
                             </label>
                             <input type="text" name="txtPhone" id="txtPhone" placeholder="Teléfono del usuario"
-                                   class="input" />
+                                   class="input" maxlength="10"/>
                         </div>
                         <div class="field">
                             <label for="txtEmail" class="label">
@@ -50,7 +50,7 @@
                             <input type="text" name="txtEmail" id="txtEmail" placeholder="Correo del usuario"
                                    class="input" />
                         </div>
-                        <div class="field">
+                        <div class="field" id="password">
                             <label for="txtPassword" class="label">
                                 Contraseña<span class="alert">*</span>:
                             </label>

@@ -160,14 +160,6 @@ const sort_by = (field, reverse, primer) => {
     };
 };
 
-function filterRegisters(){
-    pager = "";
-    pager = new Pager('tableUsers', parseInt(numRegisters.value));
-    pager.init();
-    pager.showPageNav('pager', 'pageNavPosition');
-    pager.showPage(1);
-}
-
 function clear(element, list) {
     for (let column of tableColumns) {
         if (column.id !== "actions") {

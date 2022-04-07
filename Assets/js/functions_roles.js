@@ -8,11 +8,11 @@ let modalContent = document.getElementById("modalContent");
 let span = document.getElementsByClassName("close")[0];
 
 // When the role clicks on the button, open the modal
-function openModal(height) {
+function openModal() {
     resetForm();
     modal.style.display = "block";
     setTimeout(function () {
-        modalContent.style.maxHeight = height;
+        modalContent.style.maxHeight = "700px";
     }, 100);
 }
 
@@ -27,19 +27,15 @@ function closeModal() {
 }
 
 // When the role clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target === modal) {
-        populateTable();
-        modalContent.style.maxHeight = "0";
-        setTimeout(function () {
-            modal.style.display = "none";
-            resetForm();
-        }, 500);
+modal.addEventListener('click', function (e) {
+    if (e.target === modalContent.parentElement) {
+        closeModal();
     }
-}
+});
 
 let roleName = document.getElementById("txtRoleName");
 let roleCode = document.getElementById("txtRoleCode");
+let description = document.getElementById("txtDescription");
 
 let btnForm = document.getElementById("btnActionForm");
 let status = document.getElementById("status");
@@ -71,6 +67,7 @@ function resetForm() {
     document.getElementById("formMessage").innerHTML = "Ingresa la informacion del nuevo rol";
     roleName.value = "";
     roleCode.value = "";
+    description.value = "";
     status.value = 1;
     btnForm.id = "btnActionForm";
 }
@@ -81,23 +78,26 @@ let rolesList = [];
 
 async function load() {
     rolesList = await loadJson("roles", "findAll");
-    rolesList.sort(sort_by("role_code", false));
+    rolesList.sort(sort_by("role_id", false));
     populateTable();
     filterRows = rows;
 
     pager.init();
     pager.showPageNav('pager', 'pageNavPosition');
-    pager.showPage(1);
+    if (rolesList.length > 0) {
+        pager.showPage(1);
+    }
 }
 
 async function modalEdit(id) {
-    let role = rolesList.find(findRole => findRole.role_code === id);
+    let role = rolesList.find(findRole => findRole.role_id === id);
 
     document.getElementById("formTitle").innerHTML = "Editar Rol";
     document.getElementById("formMessage").innerHTML = "Ingresa la nueva informacion del rol";
 
     roleName.value = role.role_name;
-    roleCode.value = role.role_code;
+    roleCode.value = role.role_id;
+    description.value = role.description;
     status.value = role.status;
     btnForm.id = "btnEditForm";
 
@@ -105,7 +105,7 @@ async function modalEdit(id) {
 
     modal.style.display = "block";
     setTimeout(function () {
-        modalContent.style.maxHeight = "430px";
+        modalContent.style.maxHeight = "700px";
     }, 100);
 
 }
@@ -117,11 +117,14 @@ async function alertModal(json) {
         let empty = json.fields;
         empty.map((field) => {
             switch (field) {
-                case "role_code":
-                    fields.push("Documento");
+                case "role_id":
+                    fields.push("Codigo");
                     break;
                 case "role_name":
                     fields.push("Nombre");
+                    break;
+                case "description":
+                    fields.push("Descripcion");
                     break;
                 case "status":
                     fields.push("Estado");
@@ -136,10 +139,15 @@ async function alertModal(json) {
     switch (json.code) {
         case 200:
             Swal.fire({
-                title: 'Buen trabajo!', text: `${json.message}`, icon: 'success', confirmButtonText: 'Aceptar'
+                title: 'Buen trabajo!',
+                text: `${json.message}`,
+                icon: 'success',
+                confirmButtonText: 'Confirmar',
+                confirmButtonColor: '#1c508d'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     rolesList = await loadJson("roles", "findAll");
+                    rolesList.sort(sort_by("role_id", false));
                     closeModal();
                 }
             });
@@ -149,12 +157,17 @@ async function alertModal(json) {
                 title: 'Cuidado!',
                 text: `${json.message + "\n" + string}`,
                 icon: 'warning',
-                confirmButtonText: 'Aceptar'
+                confirmButtonText: 'Confirmar',
+                confirmButtonColor: '#1c508d'
             });
             break;
         case 500:
             Swal.fire({
-                title: 'Algo salio mal!', text: `${json.message}`, icon: 'error', confirmButtonText: 'Aceptar'
+                title: 'Algo salio mal!',
+                text: `${json.message}`,
+                icon: 'error',
+                confirmButtonText: 'Confirmar',
+                confirmButtonColor: '#1c508d'
             });
             break;
         default:
@@ -162,7 +175,8 @@ async function alertModal(json) {
                 title: 'Parece que algo no va bien!',
                 text: 'Estamos trabajando para solucionarlo',
                 icon: 'info',
-                confirmButtonText: 'Aceptar'
+                confirmButtonText: 'Confirmar',
+                confirmButtonColor: '#1c508d'
             });
             break;
     }
@@ -174,6 +188,7 @@ async function save(e) {
     e.preventDefault();
     let formData = new FormData();
     formData.append("role_name", roleName.value);
+    formData.append("description", description.value);
     formData.append("status", status.value.toString());
     let url = BASE_URL + "roles/save";
     let response = await fetch(url, {
@@ -187,21 +202,35 @@ async function save(e) {
 }
 
 async function deleteRole(id) {
-    let url = BASE_URL + `roles/delete/${id}`;
-    let response = await fetch(url, {
-        method: "DELETE", headers: {
-            "Content-Type": "application/json",
-        },
+    Swal.fire({
+        title: 'Ateción!',
+        showCancelButton: true,
+        text: 'Eliminar este registro podria causar perdida de información, considera cambiar su estado a "Inactivo"',
+        icon: 'warning',
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#1c508d'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            let url = BASE_URL + `roles/delete/${id}`;
+            let response = await fetch(url, {
+                method: "DELETE", headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            let json = JSON.parse(await response.text());
+            await alertModal(json);
+        }
     });
-    let json = JSON.parse(await response.text());
-    await alertModal(json);
 }
 
 async function update(e) {
     e.preventDefault();
     let formData = new FormData();
-    formData.append("role_code", roleCode.value);
+    formData.append("role_id", roleCode.value);
     formData.append("role_name", roleName.value);
+    formData.append("description", description.value);
     formData.append("status", status.value.toString());
     let url = BASE_URL + "roles/update";
     let response = await fetch(url, {
@@ -238,7 +267,7 @@ function toggleArrow(event) {
     } else {
         caretUp.classList.remove('caret-active');
         caretDown.classList.remove('caret-active');
-        rolesList.sort(sort_by("role_code", false));
+        rolesList.sort(sort_by("role_id", false));
     }
 
     rolesList.sort(sort_by(field, reverse));
@@ -247,35 +276,51 @@ function toggleArrow(event) {
 
 function populateTable() {
     table.innerHTML = '';
-    rows = table.getElementsByTagName("TR");
-    for (let data of rolesList) {
-        let row = table.insertRow(-1);
+    if (rolesList.length > 0) {
+        rows = table.getElementsByTagName("TR");
+        for (let data of rolesList) {
+            let row = table.insertRow(-1);
 
-        let role_code = row.insertCell(0);
-        role_code.innerHTML = data.role_code;
+            let role_id = row.insertCell(0);
+            role_id.innerHTML = data.role_id;
 
-        let role_name = row.insertCell(1);
-        role_name.innerHTML = data.role_name;
+            let role_name = row.insertCell(1);
+            role_name.innerHTML = data.role_name;
 
-        let statusName = (data.status === "1") ? "Activo" : "Inactivo";
-        let statusClass = (statusName === "Activo") ? "status-active" : "status-inactive";
+            let role_description = row.insertCell(2);
+            role_description.innerHTML = data.description;
 
-        let statusRole = row.insertCell(2);
-        statusRole.innerHTML = `<span class="status ${statusClass}">${statusName}</span>`;
+            let statusName = (data.status === "1") ? "Activo" : "Inactivo";
+            let statusClass = (statusName === "Activo") ? "status-active" : "status-inactive";
 
-        let actions = row.insertCell(3);
-        actions.innerHTML = `
+            let statusRole = row.insertCell(3);
+            statusRole.innerHTML = `<span class="status ${statusClass}">${statusName}</span>`;
+
+            let actions = row.insertCell(4);
+            actions.innerHTML = `
                             <div class="table-buttons">
-                                <button id="open-modal" class="btn btn-edit" onclick="modalEdit(${data.role_code})">
+                                <button id="open-modal" class="btn btn-permission" onclick="#">
+                                    <i class="fa fa-key"></i> Permisos
+                                </button>
+                                <button id="open-modal" class="btn btn-edit" onclick="modalEdit(${data.role_id})">
                                     <i class="fa-regular fa-pen-to-square"></i> Editar
                                 </button>
-                                <button class="btn btn-delete" onclick="deleteRole('${data.role_code}')">
+                                <button class="btn btn-delete" onclick="deleteRole('${data.role_id}')">
                                     <i class="fa-regular fa-trash-can"></i> Eliminar
                                 </button>
                             </div>
                             `;
-    }
+        }
 
-    filterTable();
+        filterTable();
+    }
+}
+
+function filterRegisters(){
+    pager = "";
+    pager = new Pager('tableRoles', parseInt(numRegisters.value));
+    pager.init();
+    pager.showPageNav('pager', 'pageNavPosition');
+    pager.showPage(1);
 }
 

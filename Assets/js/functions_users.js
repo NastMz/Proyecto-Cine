@@ -8,11 +8,11 @@ let modalContent = document.getElementById("modalContent");
 let span = document.getElementsByClassName("close")[0];
 
 // When the role clicks on the button, open the modal
-function openModal(height) {
+function openModal() {
     resetForm();
     modal.style.display = "block";
     setTimeout(function () {
-        modalContent.style.maxHeight = height;
+        modalContent.style.maxHeight = "700px";
     }, 100);
 }
 
@@ -27,16 +27,11 @@ function closeModal() {
 }
 
 // When the role clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target === modal) {
-        populateTable();
-        modalContent.style.maxHeight = "0";
-        setTimeout(function () {
-            modal.style.display = "none";
-            resetForm();
-        }, 500);
+modal.addEventListener('click', function (e) {
+    if (e.target === modalContent.parentElement) {
+        closeModal();
     }
-}
+});
 
 let userName = document.getElementById("txtUserName");
 let userLastname = document.getElementById("txtUserLastname");
@@ -44,7 +39,7 @@ let userId = document.getElementById("txtUserId");
 let userPhone = document.getElementById("txtPhone");
 let userEmail = document.getElementById("txtEmail");
 let password = document.getElementById("txtPassword");
-let roleCode = document.getElementById("role");
+let roleId = document.getElementById("role");
 
 let btnForm = document.getElementById("btnActionForm");
 let status = document.getElementById("status");
@@ -80,7 +75,7 @@ function resetForm() {
     userPhone.value = "";
     userEmail.value = "";
     password.value = "";
-    roleCode.value = 1;
+    roleId.value = 1;
     status.value = 1;
     btnForm.id = "btnActionForm";
     userId.disabled = false;
@@ -95,10 +90,10 @@ async function load() {
     roleList = await loadJson("roles", `findAll`);
     let roleOptions = [];
     roleList.map((role) => {
-        roleOptions.push(`<option value="${role.role_code}">${role.role_name}</option>`);
+        roleOptions.push(`<option value="${role.role_id}">${role.role_name}</option>`);
     });
     for (let option of roleOptions) {
-        roleCode.innerHTML += option;
+        roleId.innerHTML += option;
     }
     usersList = await loadJson("users", "findAll");
     usersList.sort(sort_by("user_id", false));
@@ -107,7 +102,9 @@ async function load() {
 
     pager.init();
     pager.showPageNav('pager', 'pageNavPosition');
-    pager.showPage(1);
+    if (usersList.length > 0) {
+        pager.showPage(1);
+    }
 }
 
 async function modalEdit(id) {
@@ -121,8 +118,8 @@ async function modalEdit(id) {
     userId.value = user.user_id;
     userPhone.value = user.phone;
     userEmail.value = user.email;
-    password.value = user.password;
-    roleCode.value = user.role_code;
+    password.value = "";
+    roleId.value = user.role_id;
     status.value = user.status;
     btnForm.id = "btnEditForm";
 
@@ -151,7 +148,7 @@ async function alertModal(json) {
                 case "user_lastname":
                     fields.push("Apellido");
                     break;
-                case "role_code":
+                case "role_id":
                     fields.push("Rol");
                     break;
                 case "status":
@@ -176,10 +173,12 @@ async function alertModal(json) {
     switch (json.code) {
         case 200:
             Swal.fire({
-                title: 'Buen trabajo!', text: `${json.message}`, icon: 'success', confirmButtonText: 'Aceptar'
+                title: 'Buen trabajo!', text: `${json.message}`, icon: 'success', confirmButtonText: 'Confirmar',
+                confirmButtonColor: '#1c508d'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     usersList = await loadJson("users", "findAll");
+                    usersList.sort(sort_by("user_id", false));
                     closeModal();
                 }
             });
@@ -189,12 +188,14 @@ async function alertModal(json) {
                 title: 'Cuidado!',
                 text: `${json.message + "\n" + string}`,
                 icon: 'warning',
-                confirmButtonText: 'Aceptar'
+                confirmButtonText: 'Confirmar',
+                confirmButtonColor: '#1c508d'
             });
             break;
         case 500:
             Swal.fire({
-                title: 'Algo salio mal!', text: `${json.message}`, icon: 'error', confirmButtonText: 'Aceptar'
+                title: 'Algo salio mal!', text: `${json.message}`, icon: 'error', confirmButtonText: 'Confirmar',
+                confirmButtonColor: '#1c508d'
             });
             break;
         default:
@@ -202,7 +203,8 @@ async function alertModal(json) {
                 title: 'Parece que algo no va bien!',
                 text: 'Estamos trabajando para solucionarlo',
                 icon: 'info',
-                confirmButtonText: 'Aceptar'
+                confirmButtonText: 'Confirmar',
+                confirmButtonColor: '#1c508d'
             });
             break;
     }
@@ -215,11 +217,11 @@ async function save(e) {
     formData.append("user_id", userId.value);
     formData.append("user_name", userName.value);
     formData.append("user_lastname", userLastname.value);
-    formData.append("role_code", roleCode.value);
-    formData.append("status", status.value.toString());
     formData.append("email", userEmail.value);
-    formData.append("password", password.value);
     formData.append("phone", userPhone.value);
+    formData.append("password", password.value);
+    formData.append("status", status.value.toString());
+    formData.append("role_id", roleId.value);
     let url = BASE_URL + "users/save";
     let response = await fetch(url, {
         method: "POST", body: formData,
@@ -232,14 +234,27 @@ async function save(e) {
 }
 
 async function deleteUser(id) {
-    let url = BASE_URL + `users/delete/${id}`;
-    let response = await fetch(url, {
-        method: "DELETE", headers: {
-            "Content-Type": "application/json",
-        },
+    Swal.fire({
+        title: 'Ateción!',
+        showCancelButton: true,
+        text: 'Eliminar este registro podria causar perdida de información, considera cambiar su estado a "Inactivo"',
+        icon: 'warning',
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#1c508d'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            let url = BASE_URL + `users/delete/${id}`;
+            let response = await fetch(url, {
+                method: "DELETE", headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            let json = JSON.parse(await response.text());
+            await alertModal(json);
+        }
     });
-    let json = JSON.parse(await response.text());
-    await alertModal(json);
 }
 
 async function update(e) {
@@ -248,7 +263,7 @@ async function update(e) {
     formData.append("user_id", userId.value);
     formData.append("user_name", userName.value);
     formData.append("user_lastname", userLastname.value);
-    formData.append("role_code", roleCode.value);
+    formData.append("role_id", roleId.value);
     formData.append("status", status.value.toString());
     formData.append("email", userEmail.value);
     formData.append("password", password.value);
@@ -297,41 +312,39 @@ function toggleArrow(event) {
 
 function populateTable() {
     table.innerHTML = '';
-    rows = table.getElementsByTagName("TR");
-    for (let data of usersList) {
-        let row = table.insertRow(-1);
+    if (usersList.length > 0) {
+        rows = table.getElementsByTagName("TR");
+        for (let data of usersList) {
+            let row = table.insertRow(-1);
 
-        let user_id = row.insertCell(0);
-        user_id.innerHTML = data.user_id;
+            let user_id = row.insertCell(0);
+            user_id.innerHTML = data.user_id;
 
-        let user_name = row.insertCell(1);
-        user_name.innerHTML = data.user_name;
+            let user_name = row.insertCell(1);
+            user_name.innerHTML = data.user_name;
 
-        let user_lastname = row.insertCell(2);
-        user_lastname.innerHTML = data.user_lastname;
+            let user_lastname = row.insertCell(2);
+            user_lastname.innerHTML = data.user_lastname;
 
-        let email = row.insertCell(3);
-        email.innerHTML = data.email;
+            let email = row.insertCell(3);
+            email.innerHTML = data.email;
 
-        let phone = row.insertCell(4);
-        phone.innerHTML = data.phone;
+            let phone = row.insertCell(4);
+            phone.innerHTML = data.phone;
 
-        let statusName = (data.status === "1") ? "Activo" : "Inactivo";
-        let statusClass = (statusName === "Activo") ? "status-active" : "status-inactive";
-        let roleName = roleList.find(role => role.role_code === data.role_code);
+            let statusName = (data.status === "1") ? "Activo" : "Inactivo";
+            let statusClass = (statusName === "Activo") ? "status-active" : "status-inactive";
+            let roleName = roleList.find(role => role.role_id === data.role_id);
 
-        let roleUser = row.insertCell(5);
-        roleUser.innerHTML = roleName.role_name;
+            let roleUser = row.insertCell(5);
+            roleUser.innerHTML = roleName.role_name;
 
-        let statusUser = row.insertCell(6);
-        statusUser.innerHTML = `<span class="status ${statusClass}">${statusName}</span>`;
+            let statusUser = row.insertCell(6);
+            statusUser.innerHTML = `<span class="status ${statusClass}">${statusName}</span>`;
 
-        let actions = row.insertCell(7);
-        actions.innerHTML = `
+            let actions = row.insertCell(7);
+            actions.innerHTML = `
                             <div class="table-buttons">
-                                <button id="open-modal" class="btn btn-permission" onclick="#">
-                                    <i class="fa fa-key"></i> Permisos
-                                </button>
                                 <button id="open-modal" class="btn btn-edit" onclick="modalEdit('${data.user_id}')">
                                     <i class="fa-regular fa-pen-to-square"></i> Editar
                                 </button>
@@ -340,8 +353,17 @@ function populateTable() {
                                 </button>
                             </div>
                             `;
-    }
+        }
 
-    filterTable();
+        filterTable();
+    }
+}
+
+function filterRegisters(){
+    pager = "";
+    pager = new Pager('tableUsers', parseInt(numRegisters.value));
+    pager.init();
+    pager.showPageNav('pager', 'pageNavPosition');
+    pager.showPage(1);
 }
 

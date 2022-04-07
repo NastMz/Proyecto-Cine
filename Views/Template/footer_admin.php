@@ -62,7 +62,7 @@
 <script src="<?= media() ?>js/sidebar.js"></script>
 <script src="<?= media() ?>js/dropdown.js"></script>
 <script src="<?= media() ?>js/helpers.js"></script>
-<script src="<?= media() ?>js/font_awesome.js" crossorigin="anonymous"></script>
+<script src="<?= media() ?>js/font_awesome.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const BASE_URL = "<?=base_url()?>";

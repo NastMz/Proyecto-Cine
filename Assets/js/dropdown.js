@@ -1,19 +1,27 @@
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
+let dropdownMenu = document.getElementById("myDropdown");
+let dropdownBtn = document.getElementById("dropbtn");
+let dropdownImage = document.getElementById("user-image");
+
+function openDropdown() {
+    dropdownBtn.parentElement.classList.toggle('toggle-span');
+    dropdownImage.parentElement.classList.toggle('toggle-user');
+    dropdownMenu.classList.toggle('show');
+    dropdownBtn.classList.toggle('dropdown-transform');
+
 }
 
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-    if (!event.target.matches('.dropbtn')) {
-        let dropdowns = document.getElementsByClassName("dropdown-content");
-        let i;
-        for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
+function closeDropdown() {
+    if (dropdownMenu.classList.contains('show')){
+        dropdownMenu.classList.remove('show');
+        dropdownBtn.classList.remove('dropdown-transform');
+        dropdownBtn.parentElement.classList.remove('toggle-span');
+        dropdownImage.parentElement.classList.remove('toggle-user');
     }
 }
+
+window.onclick = function(event) {
+    if (event.target !== dropdownBtn && event.target !== dropdownImage && event.target !== dropdownImage.parentElement) {
+        closeDropdown();
+    }
+}
+

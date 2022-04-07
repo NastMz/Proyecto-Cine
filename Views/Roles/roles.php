@@ -72,6 +72,17 @@ getModal("modalRoles", $data);
                                 </span>
                             </th>
                             <th>
+                                <span id="role_name"  class="table-column">
+                                    <span class="thead">
+                                        DESCRIPCION
+                                    </span>
+                                    <span class="caret">
+                                        <i class="fa fa-caret-up"></i>
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
                                 <span id="status"  class="table-column">
                                     <span class="thead">
                                         ESTADO
