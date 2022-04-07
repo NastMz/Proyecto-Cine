@@ -21,7 +21,7 @@ class usersModel extends Crud
 
     public function updateUser(string $id, array $user)
     {
-        $query = "UPDATE users SET user_name = ?, user_lastname = ?, role_code = ?, email = ?, password = ? WHERE user_id = '$id' ";
+        $query = "UPDATE users SET user_name = ?, user_lastname = ?, role_code = ?, status=?, email = ?, password = ?, phone=? WHERE user_id = '$id' ";
         return $this->update($query, $user);
     }
 

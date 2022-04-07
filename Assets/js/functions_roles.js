@@ -38,19 +38,14 @@ window.onclick = function (event) {
     }
 }
 
-let userName = document.getElementById("txtUserName");
-let userLastname = document.getElementById("txtUserLastname");
-let userId = document.getElementById("txtUserId");
-let userPhone = document.getElementById("txtPhone");
-let userEmail = document.getElementById("txtEmail");
-let password = document.getElementById("txtPassword");
-let roleCode = document.getElementById("role");
+let roleName = document.getElementById("txtRoleName");
+let roleCode = document.getElementById("txtRoleCode");
 
 let btnForm = document.getElementById("btnActionForm");
 let status = document.getElementById("status");
 let tableColumns = document.getElementsByClassName('table-column');
 
-let table = document.getElementById("tableUsersBody");
+let table = document.getElementById("tableRoleBody");
 let search = document.getElementById('search');
 let numRegisters = document.getElementById("numRegisters");
 
@@ -72,36 +67,21 @@ for (let column of tableColumns) {
 }
 
 function resetForm() {
-    document.getElementById("formTitle").innerHTML = "Nuevo Usuario";
-    document.getElementById("formMessage").innerHTML = "Ingresa la informacion del nuevo usuario";
-    userName.value = "";
-    userLastname.value = "";
-    userId.value = "";
-    userPhone.value = "";
-    userEmail.value = "";
-    password.value = "";
-    roleCode.value = 1;
+    document.getElementById("formTitle").innerHTML = "Nuevo Rol";
+    document.getElementById("formMessage").innerHTML = "Ingresa la informacion del nuevo rol";
+    roleName.value = "";
+    roleCode.value = "";
     status.value = 1;
     btnForm.id = "btnActionForm";
-    userId.disabled = false;
 }
 
-let pager = new Pager('tableUsers', parseInt(numRegisters.value));
+let pager = new Pager('tableRoles', parseInt(numRegisters.value));
 
-let usersList = [];
-let roleList = [];
+let rolesList = [];
 
 async function load() {
-    roleList = await loadJson("roles", `findAll`);
-    let roleOptions = [];
-    roleList.map((role) => {
-        roleOptions.push(`<option value="${role.role_code}">${role.role_name}</option>`);
-    });
-    for (let option of roleOptions) {
-        roleCode.innerHTML += option;
-    }
-    usersList = await loadJson("users", "findAll");
-    usersList.sort(sort_by("user_id", false));
+    rolesList = await loadJson("roles", "findAll");
+    rolesList.sort(sort_by("role_code", false));
     populateTable();
     filterRows = rows;
 
@@ -111,26 +91,21 @@ async function load() {
 }
 
 async function modalEdit(id) {
-    let user = usersList.find(findUser => findUser.user_id === id);
+    let role = rolesList.find(findRole => findRole.role_code === id);
 
-    document.getElementById("formTitle").innerHTML = "Editar Usuario";
-    document.getElementById("formMessage").innerHTML = "Ingresa la nueva informacion del usuario";
+    document.getElementById("formTitle").innerHTML = "Editar Rol";
+    document.getElementById("formMessage").innerHTML = "Ingresa la nueva informacion del rol";
 
-    userName.value = user.user_name;
-    userLastname.value = user.user_lastname;
-    userId.value = user.user_id;
-    userPhone.value = user.phone;
-    userEmail.value = user.email;
-    password.value = user.password;
-    roleCode.value = user.role_code;
-    status.value = user.status;
+    roleName.value = role.role_name;
+    roleCode.value = role.role_code;
+    status.value = role.status;
     btnForm.id = "btnEditForm";
 
-    userId.disabled = true;
+    roleCode.disabled = true;
 
     modal.style.display = "block";
     setTimeout(function () {
-        modalContent.style.maxHeight = "700px";
+        modalContent.style.maxHeight = "430px";
     }, 100);
 
 }
@@ -142,29 +117,14 @@ async function alertModal(json) {
         let empty = json.fields;
         empty.map((field) => {
             switch (field) {
-                case "user_id":
+                case "role_code":
                     fields.push("Documento");
                     break;
-                case "user_name":
+                case "role_name":
                     fields.push("Nombre");
-                    break;
-                case "user_lastname":
-                    fields.push("Apellido");
-                    break;
-                case "role_code":
-                    fields.push("Rol");
                     break;
                 case "status":
                     fields.push("Estado");
-                    break;
-                case "email":
-                    fields.push("Correo");
-                    break;
-                case "password":
-                    fields.push("Contraseña");
-                    break;
-                case "phone":
-                    fields.push("Telefono");
                     break;
             }
         });
@@ -179,7 +139,7 @@ async function alertModal(json) {
                 title: 'Buen trabajo!', text: `${json.message}`, icon: 'success', confirmButtonText: 'Aceptar'
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    usersList = await loadJson("roles", "findAll");
+                    rolesList = await loadJson("roles", "findAll");
                     closeModal();
                 }
             });
@@ -209,18 +169,13 @@ async function alertModal(json) {
 }
 
 // Metodos del crud
+
 async function save(e) {
     e.preventDefault();
     let formData = new FormData();
-    formData.append("user_id", userId.value);
-    formData.append("user_name", userName.value);
-    formData.append("user_lastname", userLastname.value);
-    formData.append("role_code", roleCode.value);
+    formData.append("role_name", roleName.value);
     formData.append("status", status.value.toString());
-    formData.append("email", userEmail.value);
-    formData.append("password", password.value);
-    formData.append("phone", userPhone.value);
-    let url = BASE_URL + "users/save";
+    let url = BASE_URL + "roles/save";
     let response = await fetch(url, {
         method: "POST", body: formData,
     });
@@ -231,8 +186,8 @@ async function save(e) {
 
 }
 
-async function deleteUser(id) {
-    let url = BASE_URL + `users/delete/${id}`;
+async function deleteRole(id) {
+    let url = BASE_URL + `roles/delete/${id}`;
     let response = await fetch(url, {
         method: "DELETE", headers: {
             "Content-Type": "application/json",
@@ -245,15 +200,10 @@ async function deleteUser(id) {
 async function update(e) {
     e.preventDefault();
     let formData = new FormData();
-    formData.append("user_id", userId.value);
-    formData.append("user_name", userName.value);
-    formData.append("user_lastname", userLastname.value);
     formData.append("role_code", roleCode.value);
+    formData.append("role_name", roleName.value);
     formData.append("status", status.value.toString());
-    formData.append("email", userEmail.value);
-    formData.append("password", password.value);
-    formData.append("phone", userPhone.value);
-    let url = BASE_URL + "users/update";
+    let url = BASE_URL + "roles/update";
     let response = await fetch(url, {
         method: "POST", body: formData,
     });
@@ -271,7 +221,7 @@ function toggleArrow(event) {
     let element = event.target.parentElement;
     let field, reverse;
 
-    clear(element, usersList);
+    clear(element, rolesList);
 
     field = element.id;
 
@@ -290,48 +240,35 @@ function toggleArrow(event) {
         caretDown.classList.remove('caret-active');
     }
 
-    usersList.sort(sort_by(field, reverse));
+    rolesList.sort(sort_by(field, reverse));
     populateTable();
 }
 
 function populateTable() {
     table.innerHTML = '';
     rows = table.getElementsByTagName("TR");
-    for (let data of usersList) {
+    for (let data of rolesList) {
         let row = table.insertRow(-1);
 
-        let user_id = row.insertCell(0);
-        user_id.innerHTML = data.user_id;
+        let role_code = row.insertCell(0);
+        role_code.innerHTML = data.role_code;
 
-        let user_name = row.insertCell(1);
-        user_name.innerHTML = data.user_name;
-
-        let user_lastname = row.insertCell(2);
-        user_lastname.innerHTML = data.user_lastname;
-
-        let email = row.insertCell(3);
-        email.innerHTML = data.email;
-
-        let phone = row.insertCell(4);
-        phone.innerHTML = data.phone;
+        let role_name = row.insertCell(1);
+        role_name.innerHTML = data.role_name;
 
         let statusName = (data.status === "1") ? "Activo" : "Inactivo";
         let statusClass = (statusName === "Activo") ? "status-active" : "status-inactive";
-        let roleName = roleList.find(role => role.role_code === data.role_code);
 
-        let roleUser = row.insertCell(5);
-        roleUser.innerHTML = roleName.role_name;
+        let statusRole = row.insertCell(2);
+        statusRole.innerHTML = `<span class="status ${statusClass}">${statusName}</span>`;
 
-        let statusUser = row.insertCell(6);
-        statusUser.innerHTML = `<span class="status ${statusClass}">${statusName}</span>`;
-
-        let actions = row.insertCell(7);
+        let actions = row.insertCell(3);
         actions.innerHTML = `
                             <div class="table-buttons">
-                                <button id="open-modal" class="btn btn-edit" onclick="modalEdit('${data.user_id}')">
+                                <button id="open-modal" class="btn btn-edit" onclick="modalEdit(${data.role_code})">
                                     <i class="fa-regular fa-pen-to-square"></i> Editar
                                 </button>
-                                <button class="btn btn-delete" onclick="deleteUser('${data.user_id}')">
+                                <button class="btn btn-delete" onclick="deleteRole('${data.role_code}')">
                                     <i class="fa-regular fa-trash-can"></i> Eliminar
                                 </button>
                             </div>

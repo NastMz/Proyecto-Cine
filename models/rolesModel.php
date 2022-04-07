@@ -7,10 +7,10 @@ class rolesModel extends Crud
         parent::__construct();
     }
 
-    public function saveRole(array $user)
+    public function saveRole(array $role)
     {
-        $query = "INSERT INTO users(user_id, user_name, user_lastname, role_code, email, password) VALUES (?,?,?,?,?,?)";
-        return $this->save($query, $user);
+        $query = "INSERT INTO roles(role_name, status) VALUES (?,?)";
+        return $this->save($query, $role);
     }
 
     public function findRoleById(string $id)
@@ -19,10 +19,10 @@ class rolesModel extends Crud
         return $this->find($query);
     }
 
-    public function updateRole(string $id, array $user)
+    public function updateRole(string $id, array $role)
     {
-        $query = "UPDATE users SET user_name = ?, user_lastname = ?, role_code = ?, email = ?, password = ? WHERE user_id = '$id' ";
-        return $this->update($query, $user);
+        $query = "UPDATE roles SET role_name = ?, status = ? WHERE role_code = '$id' ";
+        return $this->update($query, $role);
     }
 
     public function findRoles()
@@ -33,7 +33,7 @@ class rolesModel extends Crud
 
     public function deleteRole($id)
     {
-        $query = "DELETE FROM users WHERE user_id = '$id'";
+        $query = "DELETE FROM roles WHERE role_code = '$id'";
         return $this->delete($query);
     }
 }

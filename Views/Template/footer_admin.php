@@ -61,7 +61,9 @@
 </footer>
 <script src="<?= media() ?>js/sidebar.js"></script>
 <script src="<?= media() ?>js/dropdown.js"></script>
-<script src="<?= media() ?>js/modal.js"></script>
+<script src="<?= media() ?>js/helpers.js"></script>
+<script src="<?= media() ?>js/font_awesome.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const BASE_URL = "<?=base_url()?>";
 </script>
@@ -73,6 +75,6 @@ if ($data['page_name'] == 'users'){
 }
 ?>
 <script src="<?= media() ?>js/functions_admin.js"></script>
-<script src="https://kit.fontawesome.com/f0f6bc91a0.js" crossorigin="anonymous"></script>
+
 </body>
 </html>

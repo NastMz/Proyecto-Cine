@@ -43,14 +43,13 @@ body {
     color: var(--white);
     display: flex;
     justify-content: center;
-    align-items: stretch;
-    padding: 20px;
+    align-items: center;
     font-weight: bold;
 }
 
 .header-columns {
-    height: 90%;
-    width: 100%;
+    height: 85%;
+    width: 95%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -61,6 +60,7 @@ body {
     justify-content: flex-start;
     align-items: center;
     width: 100%;
+    height: 100%;
 }
 
 .sidebar-button {
@@ -104,6 +104,9 @@ body {
 .nav-menu {
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .nav-tabs {
@@ -602,6 +605,7 @@ footer span {
 .title-page h1 {
     display: flex;
     align-items: center;
+    font-size: 1.5em;
 }
 
 @media screen and (max-width: 750px) {
@@ -680,15 +684,29 @@ footer span {
 /* Modal Content/Box */
 .modal-content {
     margin: 20px auto; /* 15% from the top and centered */
-    width: 90%; /* Could be more or less, depending on screen size */
-    height: fit-content;
-    display: flex;
+    width: 60%; /* Could be more or less, depending on screen size */
+    max-height: 0;
+    display: block;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border-radius: 8px;
     box-shadow: var(--box-shadow);
     background-color: var(--main-blue-color);
+    overflow: hidden;
+    transition: all .5s ease-in-out;
+}
+
+@media screen and (max-width: 750px) and (min-width: 450px) {
+    .modal-content {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .modal-content {
+        width: 95%;
+    }
 }
 
 /* The Close Button */
@@ -1013,6 +1031,7 @@ textarea {
 
 .search-bar .input {
     margin: 2px;
+    padding: .5rem 0.75rem;
 }
 
 .search-bar .label {
@@ -1024,19 +1043,19 @@ textarea {
 }
 
 .table-data {
-    padding: 10px;
+    padding-top: 10px;
     width: 100%;
     height: fit-content;
     margin: auto;
     overflow-x: auto;
-    font-size: 1em;
+    font-size: 0.75em;
     border-radius: 6px;
     text-align: center;
 }
 
 @media screen and (max-width: 750px) {
     .table-data {
-        font-size: 0.9em;
+        font-size: 0.6em;
         padding: 5px;
     }
 }
@@ -1051,6 +1070,10 @@ table {
     overflow: hidden;
     box-shadow: var(--box-shadow);
     letter-spacing: 1px;
+}
+
+tr {
+
 }
 
 td, th {
@@ -1073,11 +1096,52 @@ tfoot {
 
 thead th, tfoot td {
     padding: 0.5em;
+    overflow: hidden;
 }
 
 tbody tr:hover {
     background-color: var(--cian);
     color: white;
+}
+
+.table-data span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table-data .thead {
+    text-align: center;
+    width: 100%;
+}
+
+.caret {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    color: var(--dark);
+}
+
+.caret i {
+    padding: 0;
+    margin: 0;
+}
+
+.caret-active {
+    color: var(--white);
+}
+
+.table-data .btn {
+    font-size: 0.85em;
+}
+
+.table-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
 }
 
 .btn-edit {
@@ -1125,24 +1189,22 @@ tbody tr:hover {
     justify-content: flex-end;
 }
 
-/* Pagination links */
-.pagination a {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-    transition: background-color .3s;
-    border-radius: 6px;
+.pager-nav {
+    margin: 16px 0;
 }
-
-
-/* Style the active/current link */
-.pagination a.active {
+.pager-nav span {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 1px;
+    cursor: pointer;
+    font-size: 14px;
+    background-color: #FFFFFF;
+    border: 1px solid #e1e1e1;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+.pager-nav span:hover,
+.pager-nav .pg-selected {
     background-color: var(--main-blue-color);
-    color: var(--white);
-}
-
-/* Add a grey background color on mouse-over */
-.pagination a:hover:not(.active) {
-    background-color:  #ddd;
+    border: 1px solid #CCCCCC;
 }

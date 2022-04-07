@@ -1,11 +1,11 @@
 <!-- The Modal -->
 <div id="modal" class="modal">
     <!-- Modal content -->
-    <div class="modal-content">
+    <div id="modalContent" class="modal-content">
         <div class="close-button">
             <div class="form-title">
-                <h5>Nuevo Rol</h5>
-                <p>Ingresa la informacion del nuevo rol</p>
+                <h5 id="formTitle">Nuevo Rol</h5>
+                <p id="formMessage">Ingresa la informacion del nuevo rol</p>
             </div>
             <span class="close" onclick="closeModal()">
                 <i class="fa-regular fa-circle-xmark"></i>
@@ -13,35 +13,32 @@
         </div>
         <div class="form">
             <div class="form-group">
-                <form id="formRole" name="formRole">
+                <form id="formRole" name="formRole" method="post">
+                    <div class="field">
+                        <input type="hidden" name="txtRoleCode" id="txtRoleCode" placeholder="Codigo del rol"
+                               class="input"/>
+                    </div>
                     <div class="field">
                         <label for="txtRoleName" class="label">
                             Nombre<span class="alert">*</span>:
                         </label>
                         <input type="text" name="txtRoleName" id="txtRoleName" placeholder="Nombre del rol"
-                               class="input" required/>
-                    </div>
-                    <div class="field">
-                        <label for="txtRoleDescription" class="label">
-                            Descripción<span class="alert">*</span>:
-                        </label>
-                        <textarea name="txtRoleDescription" id="txtRoleDescription" placeholder="Descripción del rol"
-                                  rows="2" class="input" required></textarea>
+                               class="input"/>
                     </div>
                     <div class="field">
                         <label for="status" class="label">
                             Estado<span class="alert">*</span>:
                         </label>
-                        <select name="status" id="status" class="input" required>
+                        <select name="status" id="status" class="input">
                             <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
+                            <option value="2">Inactivo</option>
                         </select>
                     </div>
                     <span class="alert">
                         *Todos los campos son obligatorios
                     </span>
                     <div class="form-button">
-                        <button id="btnActionForm" type="submit" class="btn btn-submit">
+                        <button id="btnActionForm" type="submit" class="btn btn-submit" onclick="sendRequest(event)">
                             Guardar
                         </button>
                     </div>

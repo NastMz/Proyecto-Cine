@@ -10,7 +10,7 @@ getModal("modalUsers", $data);
                     <h1>
                         <i class="fa fa-user-group"></i> <?= $data['page_title'] ?>
                     </h1>
-                    <button id="open-modal" class="btn btn-primary" onclick="openModal()">
+                    <button id="open-modal" class="btn btn-primary" onclick="openModal('700px')">
                         <i class="fa fa-plus"></i> Nuevo
                     </button>
                 </div>
@@ -33,7 +33,7 @@ getModal("modalUsers", $data);
                     <div class="registers">
                         <label for="numRegisters" class="label">Mostrar:</label>
                         <select id="numRegisters" name="numRegisters" class="input" >
-                            <option value="10">10</option>
+                            <option value="10" selected>10</option>
                             <option value="20">25</option>
                             <option value="30">50</option>
                             <option value="100">100</option>
@@ -49,13 +49,90 @@ getModal("modalUsers", $data);
                     <table id="tableUsers">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>NOMBRE</th>
-                            <th>EMAIL</th>
-                            <th>TELEFONO</th>
-                            <th>ROL</th>
-                            <th>ESTADO</th>
-                            <th>ACCIONES</th>
+                            <th>
+                                <span id="user_id"  class="table-column">
+                                    <span class="thead">
+                                        ID
+                                    </span>
+                                    <span class="caret">
+                                        <i class="fa fa-caret-up"></i>
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
+                                <span id="user_name"  class="table-column">
+                                    <span class="thead">
+                                        NOMBRE
+                                    </span>
+                                    <span class="caret">
+                                        <i class="fa fa-caret-up"></i>
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
+                                <span id="user_lastname"  class="table-column">
+                                    <span class="thead">
+                                        APELLIDO
+                                    </span>
+                                    <span class="caret">
+                                        <i class="fa fa-caret-up"></i>
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
+                                <span id="email"  class="table-column">
+                                    <span class="thead">
+                                        EMAIL
+                                    </span>
+                                    <span class="caret">
+                                        <i class="fa fa-caret-up"></i>
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
+                                <span id="phone"  class="table-column">
+                                    <span class="thead">
+                                        TELEFONO
+                                    </span>
+                                    <span class="caret">
+                                        <i class="fa fa-caret-up"></i>
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
+                                <span id="role_code"  class="table-column">
+                                    <span class="thead" >
+                                        ROL
+                                    </span>
+                                    <span class="caret">
+                                        <i class="fa fa-caret-up"></i>
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
+                                <span id="status"  class="table-column">
+                                    <span class="thead">
+                                        ESTADO
+                                    </span>
+                                    <span class="caret">
+                                        <i class="fa fa-caret-up"></i>
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
+                                <span id="actions" class="table-column">
+                                    <span class="thead">
+                                        ACCIONES
+                                    </span>
+                                </span>
+                            </th>
                         </tr>
                         </thead>
                         <tbody id="tableUsersBody">
@@ -69,14 +146,7 @@ getModal("modalUsers", $data);
                     </table>
                 </div>
                 <div class="pagination">
-                    <a href="#">&laquo;</a>
-                    <a class="active" href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#">6</a>
-                    <a href="#">&raquo;</a>
+                    <div id="pageNavPosition" class="pager-nav"></div>
                 </div>
             </div>
         </div>
