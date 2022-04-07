@@ -179,7 +179,7 @@ async function alertModal(json) {
                 title: 'Buen trabajo!', text: `${json.message}`, icon: 'success', confirmButtonText: 'Aceptar'
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    usersList = await loadJson("roles", "findAll");
+                    usersList = await loadJson("users", "findAll");
                     closeModal();
                 }
             });
@@ -288,6 +288,7 @@ function toggleArrow(event) {
     } else {
         caretUp.classList.remove('caret-active');
         caretDown.classList.remove('caret-active');
+        field = "user_id";
     }
 
     usersList.sort(sort_by(field, reverse));
@@ -328,6 +329,9 @@ function populateTable() {
         let actions = row.insertCell(7);
         actions.innerHTML = `
                             <div class="table-buttons">
+                                <button id="open-modal" class="btn btn-permission" onclick="#">
+                                    <i class="fa fa-key"></i> Permisos
+                                </button>
                                 <button id="open-modal" class="btn btn-edit" onclick="modalEdit('${data.user_id}')">
                                     <i class="fa-regular fa-pen-to-square"></i> Editar
                                 </button>

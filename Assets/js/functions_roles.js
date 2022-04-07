@@ -238,6 +238,7 @@ function toggleArrow(event) {
     } else {
         caretUp.classList.remove('caret-active');
         caretDown.classList.remove('caret-active');
+        rolesList.sort(sort_by("role_code", false));
     }
 
     rolesList.sort(sort_by(field, reverse));

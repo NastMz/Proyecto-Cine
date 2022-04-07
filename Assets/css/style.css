@@ -1162,6 +1162,15 @@ tbody tr:hover {
     background-color: var(--red-hover);
 }
 
+.btn-permission {
+    background-color: var(--dark);
+    color: var(--white);
+}
+
+.btn-permission:hover {
+    background-color: var(--dark-hover);
+}
+
 .status {
     width: fit-content;
     margin: auto;
