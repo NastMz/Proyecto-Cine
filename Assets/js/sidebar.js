@@ -16,7 +16,7 @@ function closeNav() {
 }
 
 sidebar.addEventListener('click', function (e) {
-    if (e.target === sidebar){
+    if (e.target === sidebar) {
         closeNav();
     }
 });

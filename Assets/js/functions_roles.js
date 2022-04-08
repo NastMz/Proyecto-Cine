@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", load);
 
 // Get the modal
-let modal = document.getElementById("modal");
-let modalContent = document.getElementById("modalContent");
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modalContent");
 
 // Get the <span> element that closes the modal
-let span = document.getElementsByClassName("close")[0];
+const span = document.getElementsByClassName("close")[0];
 
 // When the role clicks on the button, open the modal
 function openModal() {
@@ -33,17 +33,17 @@ modal.addEventListener('click', function (e) {
     }
 });
 
-let roleName = document.getElementById("txtRoleName");
-let roleCode = document.getElementById("txtRoleCode");
-let description = document.getElementById("txtDescription");
+const roleName = document.getElementById("txtRoleName");
+const roleCode = document.getElementById("txtRoleCode");
+const description = document.getElementById("txtDescription");
 
-let btnForm = document.getElementById("btnActionForm");
-let status = document.getElementById("status");
-let tableColumns = document.getElementsByClassName('table-column');
+const btnForm = document.getElementById("btnActionForm");
+const status = document.getElementById("status");
+const tableColumns = document.getElementsByClassName('table-column');
 
-let table = document.getElementById("tableRoleBody");
-let search = document.getElementById('search');
-let numRegisters = document.getElementById("numRegisters");
+const table = document.getElementById("tableRoleBody");
+const search = document.getElementById('search');
+const numRegisters = document.getElementById("numRegisters");
 
 let rows = [];
 let filterRows = [];
@@ -87,6 +87,7 @@ async function load() {
     if (rolesList.length > 0) {
         pager.showPage(1);
     }
+    showPage();
 }
 
 async function modalEdit(id) {
@@ -277,7 +278,6 @@ function toggleArrow(event) {
 function populateTable() {
     table.innerHTML = '';
     if (rolesList.length > 0) {
-        rows = table.getElementsByTagName("TR");
         for (let data of rolesList) {
             let row = table.insertRow(-1);
 
@@ -311,12 +311,20 @@ function populateTable() {
                             </div>
                             `;
         }
-
+        rows = table.getElementsByTagName("TR");
         filterTable();
+    } else {
+        let row = table.insertRow(-1);
+        row.insertCell(0).innerHTML = "-";
+        row.insertCell(1).innerHTML = "-";
+        row.insertCell(2).innerHTML = "-";
+        row.insertCell(3).innerHTML = "-";
+        row.insertCell(4).innerHTML = "-";
+
     }
 }
 
-function filterRegisters(){
+function filterRegisters() {
     pager = "";
     pager = new Pager('tableRoles', parseInt(numRegisters.value));
     pager.init();

@@ -8,7 +8,7 @@ function base_url()
 
 function media()
 {
-    return BASE_URL."Assets/";
+    return BASE_URL . "Assets/";
 }
 
 function headerAdmin($data = "")
@@ -45,7 +45,8 @@ function dep($data)
     return $format;
 }
 
-function getModal(string $nameModal, $data){
+function getModal(string $nameModal, $data)
+{
     $view_modal = "Views/Template/Modals/{$nameModal}.php";
     require_once($view_modal);
 }
@@ -116,6 +117,6 @@ function tokenGenerator()
 function formatMoney($cantidad)
 {
     $cantidad = number_format($cantidad, 2, SPD, SPM);
-    return SMONEY.$cantidad;
+    return SMONEY . $cantidad;
 }
 

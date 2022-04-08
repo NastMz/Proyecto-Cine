@@ -9,8 +9,20 @@ class usersModel extends Crud
 
     public function saveUser(array $user)
     {
-        $query = "INSERT INTO users(user_id, user_name, user_lastname, role_code, status, email, password, phone) VALUES (?,?,?,?,?,?,?,?)";
-        return $this->save($query, $user);
+        $query = "INSERT INTO users(";
+        $count = 0;
+        $data = [];
+        foreach ($user as $key => $value) {
+            $query .= $key . ", ";
+            $count += 1;
+            $data[] = $value;
+        }
+        $query = trim($query, ", ");
+        $query .= ") VALUES(";
+        $query .= str_repeat("?, ", $count);
+        $query = trim($query, ", ");
+        $query .= ")";
+        return $this->save($query, $data);
     }
 
     public function findUserById(string $id)
@@ -19,10 +31,21 @@ class usersModel extends Crud
         return $this->find($query);
     }
 
-    public function updateUser(string $id, array $user)
+    public function updateUser(array $user)
     {
-        $query = "UPDATE users SET user_name = ?, user_lastname = ?, role_code = ?, status=?, email = ?, password = ?, phone=? WHERE user_id = '$id' ";
-        return $this->update($query, $user);
+        $id = $user['user_id'];
+        $data = [];
+        $query = "UPDATE users SET ";
+        foreach ($user as $key => $value) {
+            if ($key != "user_id") {
+                $query .= $key . " = ?, ";
+                $data[] = $value;
+            }
+        }
+
+        $query = trim($query, ", ");
+        $query .= " WHERE user_id = '$id'";
+        return $this->update($query, $data);
     }
 
     public function findUsers()

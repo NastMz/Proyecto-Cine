@@ -1,4 +1,3 @@
-
 <footer>
     <div class="container">
         <div class="columns-footer">
@@ -68,10 +67,10 @@
     const BASE_URL = "<?=base_url()?>";
 </script>
 <?php
-if ($data['page_name'] == 'users'){
-    echo '<script src="'.media().'js/functions_users.js"></script>';
-}else if ($data['page_name'] == 'roles'){
-    echo '<script src="'.media().'js/functions_roles.js"></script>';
+if ($data['page_name'] == 'users') {
+    echo '<script src="' . media() . 'js/functions_users.js"></script>';
+} else if ($data['page_name'] == 'roles') {
+    echo '<script src="' . media() . 'js/functions_roles.js"></script>';
 }
 ?>
 <script src="<?= media() ?>js/functions_admin.js"></script>

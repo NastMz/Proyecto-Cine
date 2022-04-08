@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="referrer" content="origin">
     <meta name="theme-color" content="#000">
@@ -68,7 +68,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Roboto&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="<?= media() ?>css/style.css">
+    <link rel="stylesheet" type="text/css" href="<?= media() ?>css/style.css">
 </head>
 <body>
 
@@ -104,16 +104,18 @@
                                                            id="user-image"></i></span>
                             </div>
                         </button>
-                        <div id="myDropdown" class="dropdown-content">
-                            <a href="<?= base_url() ?>settings">
-                                <i class="fa fa-cogs" aria-hidden="true"></i> Configuración
-                            </a>
-                            <a href="<?= base_url() ?>profile">
-                                <i class="fa fa-user" aria-hidden="true"></i> Perfil
-                            </a>
-                            <a href="<?= base_url() ?>logout">
-                                <i class="fa  fa-sign-out" aria-hidden="true"></i> Cerrar Sesión
-                            </a>
+                        <div class="dropdown-background" id="dropdown-background">
+                            <div id="myDropdown" class="dropdown-content">
+                                <a href="<?= base_url() ?>settings">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i> Configuración
+                                </a>
+                                <a href="<?= base_url() ?>profile">
+                                    <i class="fa fa-user" aria-hidden="true"></i> Perfil
+                                </a>
+                                <a href="<?= base_url() ?>logout">
+                                    <i class="fa  fa-sign-out" aria-hidden="true"></i> Cerrar Sesión
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

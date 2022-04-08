@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", load);
 
 // Get the modal
-let modal = document.getElementById("modal");
-let modalContent = document.getElementById("modalContent");
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modalContent");
 
 // Get the <span> element that closes the modal
-let span = document.getElementsByClassName("close")[0];
+const span = document.getElementsByClassName("close")[0];
 
 // When the role clicks on the button, open the modal
 function openModal() {
@@ -33,21 +33,21 @@ modal.addEventListener('click', function (e) {
     }
 });
 
-let userName = document.getElementById("txtUserName");
-let userLastname = document.getElementById("txtUserLastname");
-let userId = document.getElementById("txtUserId");
-let userPhone = document.getElementById("txtPhone");
-let userEmail = document.getElementById("txtEmail");
-let password = document.getElementById("txtPassword");
-let roleId = document.getElementById("role");
+const userName = document.getElementById("txtUserName");
+const userLastname = document.getElementById("txtUserLastname");
+const userId = document.getElementById("txtUserId");
+const userPhone = document.getElementById("txtPhone");
+const userEmail = document.getElementById("txtEmail");
+const password = document.getElementById("txtPassword");
+const roleId = document.getElementById("role");
 
-let btnForm = document.getElementById("btnActionForm");
-let status = document.getElementById("status");
-let tableColumns = document.getElementsByClassName('table-column');
+const btnForm = document.getElementById("btnActionForm");
+const status = document.getElementById("statusId");
+const tableColumns = document.getElementsByClassName('table-column');
 
-let table = document.getElementById("tableUsersBody");
-let search = document.getElementById('search');
-let numRegisters = document.getElementById("numRegisters");
+const table = document.getElementById("tableUsersBody");
+const search = document.getElementById('search');
+const numRegisters = document.getElementById("numRegisters");
 
 let rows = [];
 let filterRows = [];
@@ -105,6 +105,7 @@ async function load() {
     if (usersList.length > 0) {
         pager.showPage(1);
     }
+    showPage();
 }
 
 async function modalEdit(id) {
@@ -313,7 +314,6 @@ function toggleArrow(event) {
 function populateTable() {
     table.innerHTML = '';
     if (usersList.length > 0) {
-        rows = table.getElementsByTagName("TR");
         for (let data of usersList) {
             let row = table.insertRow(-1);
 
@@ -354,12 +354,23 @@ function populateTable() {
                             </div>
                             `;
         }
-
+        rows = table.getElementsByTagName("TR");
         filterTable();
+    }else {
+        let row = table.insertRow(-1);
+        row.insertCell(0).innerHTML = "-";
+        row.insertCell(1).innerHTML = "-";
+        row.insertCell(2).innerHTML = "-";
+        row.insertCell(3).innerHTML = "-";
+        row.insertCell(4).innerHTML = "-";
+        row.insertCell(5).innerHTML = "-";
+        row.insertCell(6).innerHTML = "-";
+        row.insertCell(7).innerHTML = "-";
+
     }
 }
 
-function filterRegisters(){
+function filterRegisters() {
     pager = "";
     pager = new Pager('tableUsers', parseInt(numRegisters.value));
     pager.init();

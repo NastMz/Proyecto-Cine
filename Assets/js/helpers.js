@@ -178,3 +178,8 @@ function clear(element, list) {
         }
     }
 }
+
+function showPage() {
+    document.getElementById("loader-body").style.display = "none";
+    document.getElementById("content").style.display = "block";
+}

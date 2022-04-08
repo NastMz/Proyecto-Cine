@@ -20,14 +20,14 @@
                                 Nombre<span class="alert">*</span>:
                             </label>
                             <input type="text" name="txtUserName" id="txtUserName" placeholder="Nombre del usuario"
-                                   class="input" />
+                                   class="input"/>
                         </div>
                         <div class="field">
                             <label for="txtUserLastname" class="label">
                                 Apellido<span class="alert">*</span>:
                             </label>
                             <input type="text" name="txtUserLastname" id="txtUserLastname"
-                                   placeholder="Apellido del usuario" class="input" />
+                                   placeholder="Apellido del usuario" class="input"/>
                         </div>
                         <div class="field">
                             <label for="txtUserId" class="label">
@@ -48,27 +48,28 @@
                                 Correo<span class="alert">*</span>:
                             </label>
                             <input type="text" name="txtEmail" id="txtEmail" placeholder="Correo del usuario"
-                                   class="input" />
+                                   class="input"/>
                         </div>
                         <div class="field" id="password">
                             <label for="txtPassword" class="label">
                                 Contraseña<span class="alert">*</span>:
                             </label>
-                            <input type="password" name="txtPassword" id="txtPassword" placeholder="Contraseña del usuario"
-                                   class="input" />
+                            <input type="password" name="txtPassword" id="txtPassword"
+                                   placeholder="Contraseña del usuario"
+                                   class="input"/>
                         </div>
                         <div class="field">
                             <label for="role" class="label">
                                 Rol<span class="alert">*</span>:
                             </label>
-                            <select name="role" id="role" class="input" >
+                            <select name="role" id="role" class="input">
                             </select>
                         </div>
                         <div class="field">
                             <label for="status" class="label">
                                 Estado<span class="alert">*</span>:
                             </label>
-                            <select name="status" id="status" class="input" >
+                            <select name="status" id="statusId" class="input">
                                 <option value="1">Activo</option>
                                 <option value="2">Inactivo</option>
                             </select>

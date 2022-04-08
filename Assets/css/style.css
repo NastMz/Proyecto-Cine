@@ -76,6 +76,7 @@ body {
 
 .logo {
     height: 100%;
+    width: -moz-fit-content;
     width: fit-content;
     display: flex;
     padding: 5px;
@@ -115,6 +116,7 @@ body {
 
 .nav-tabs a {
     transition: all .3s;
+    -webkit-user-select: none;
     user-select: none;
     border-radius: 1.5em;
     line-height: 1;
@@ -152,16 +154,19 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: -moz-fit-content;
     width: fit-content;
     margin-left: 50px;
 }
 
 .user {
     height: 100%;
+    width: -moz-fit-content;
     width: fit-content;
     display: flex;
     justify-content: flex-end;
     right: 0;
+    z-index: 1;
 }
 
 .user-image {
@@ -174,6 +179,7 @@ body {
 
 .caretBtn {
     background-color: var(--main-blue-color);
+    width: -moz-fit-content;
     width: fit-content;
     height: fit-content;
     font-size: 1rem;
@@ -254,13 +260,16 @@ body {
     justify-content: center;
     position: absolute;
     background-color: var(--white);
+    width: -moz-fit-content;
     width: fit-content;
     max-height: 0;
-    right: 5px;
+    right: 15px;
+    top: 65px;
     box-shadow: var(--box-shadow-hover);
     overflow: hidden;
     transition: all 0.3s ease-in-out;
     border-radius: 6px;
+    z-index: 2;
 }
 
 /* Links inside the dropdown */
@@ -283,6 +292,23 @@ body {
     border-radius: 100px;
     background-color: var(--secondary-blue-color);
     color: var(--white);
+}
+
+.dropdown-background {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: -1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.toggle-background {
+    display: block;
 }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
@@ -391,6 +417,7 @@ body {
 
 .button-primary {
     margin: auto;
+    -webkit-user-select: none;
     user-select: none;
     height: auto;
     padding: .75rem 1.375rem;
@@ -606,6 +633,7 @@ footer span {
 
 .container-dashboard {
     height: fit-content;
+    width: 100%;
     padding: 5px;
 }
 
@@ -648,7 +676,6 @@ footer span {
     margin-right: 2px;
 }
 
-
 .title-page ul {
     display: flex;
 }
@@ -666,6 +693,7 @@ footer span {
 }
 
 .btn {
+    -webkit-user-select: none;
     user-select: none;
     height: fit-content;
     line-height: 1;
@@ -867,6 +895,7 @@ textarea {
 }
 
 .btn-submit {
+    -webkit-user-select: none;
     user-select: none;
     height: auto;
     padding: .75rem 1.375rem;
@@ -950,12 +979,6 @@ textarea {
     color: var(--black);
 }
 
-/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-#main {
-    transition: margin-left .5s;
-    padding: 20px;
-}
-
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
     .sidenav {
@@ -983,6 +1006,7 @@ textarea {
     text-transform: uppercase;
     line-height: 1;
     padding: .625rem 1.25rem;
+    -webkit-user-select: none;
     user-select: none;
     margin-top: .625rem;
     margin-bottom: .625rem;
@@ -1044,6 +1068,7 @@ textarea {
     justify-content: center;
     align-content: center;
     height: fit-content;
+    width: -moz-fit-content;
     width: fit-content;
 }
 
@@ -1051,6 +1076,7 @@ textarea {
     margin: 2px;
     padding: 0;
     height: fit-content;
+    width: -moz-fit-content;
     width: fit-content;
 }
 
@@ -1197,6 +1223,7 @@ tbody tr:hover {
 }
 
 .status {
+    width: -moz-fit-content;
     width: fit-content;
     margin: auto;
     padding: 0.2em;
@@ -1243,4 +1270,60 @@ tbody tr:hover {
 .pager-nav .pg-selected {
     background-color: var(--main-blue-color);
     border: 1px solid #CCCCCC;
+}
+
+/*************************** Loading Screen *************************/
+
+/* Center the loader */
+#loader-body {
+    /*position: absolute;*/
+    margin: 50px auto;
+    width: 120px;
+    height: 120px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes animatebottom {
+    from {
+        bottom: -100px;
+        opacity: 0
+    }
+    to {
+        bottom: 0;
+        opacity: 1
+    }
+}
+
+#content {
+    display: none;
+    text-align: center;
+}
+
+.animate-bottom {
+    position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 1s;
+    animation-name: animatebottom;
+    animation-duration: 1s
+}
+
+.main {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

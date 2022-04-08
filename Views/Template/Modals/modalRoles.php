@@ -30,7 +30,7 @@
                             Descripcion<span class="alert">*</span>:
                         </label>
                         <textarea name="txtDescription" id="txtDescription" placeholder="Descripcion del rol"
-                               class="input"></textarea>
+                                  class="input"></textarea>
                     </div>
                     <div class="field">
                         <label for="status" class="label">

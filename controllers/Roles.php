@@ -12,6 +12,51 @@ class Roles extends Controllers
         parent::__construct();
     }
 
+    public function roles()
+    {
+        $data['page_tag'] = "Cine Colombia - Roles";
+        $data['page_title'] = 'Roles';
+        $data['page_name'] = "roles";
+        $data['page_id'] = 3;
+        $this->views->getView($this, "roles", $data);
+    }
+
+    public function save()
+    {
+        $requestData = $_POST;
+
+        $emptyKeys = $this->emptyKeys($requestData);
+
+        if (!empty($emptyKeys)) {
+            $this->setFAIL($emptyKeys);
+            $message = $this->getFAIL();
+            echo json_encode($message, JSON_UNESCAPED_UNICODE);
+            die();
+        }
+
+        $request = $this->model->saveRole($requestData);
+
+        if ($request) {
+            $message = $this->getSUCCESS();
+        } else {
+            $message = $this->getERROR();
+        }
+        echo json_encode($message, JSON_UNESCAPED_UNICODE);
+    }
+
+    function emptyKeys($data)
+    {
+        $emptyKeys = [];
+
+        foreach ($data as $key => $value) {
+            if (empty($value)) {
+                $emptyKeys[] = $key;
+            }
+        }
+
+        return $emptyKeys;
+    }
+
     /**
      * @return array
      */
@@ -44,50 +89,10 @@ class Roles extends Controllers
         return $this->ERROR;
     }
 
-    public function roles()
-    {
-        $data['page_tag'] = "Cine Colombia - Roles";
-        $data['page_title'] = 'Roles';
-        $data['page_name'] = "roles";
-        $data['page_id'] = 3;
-        $this->views->getView($this, "roles", $data);
-    }
-
-    public function save()
-    {
-        $requestData = $_POST;
-
-        $emptyKeys = $this->emptyKeys($requestData);
-
-        if (!empty($emptyKeys)) {
-            $this->setFAIL($emptyKeys);
-            $message = $this->getFAIL();
-            echo json_encode($message, JSON_UNESCAPED_UNICODE);
-            die();
-        }
-
-        $data = [];
-
-        foreach ($requestData as $key => $value) {
-            $data[] = $value;
-        }
-
-        $request = $this->model->saveRole($data);
-
-        if ($request) {
-            $message = $this->getSUCCESS();
-        } else {
-            $message = $this->getERROR();
-        }
-        echo json_encode($message, JSON_UNESCAPED_UNICODE);
-        die();
-    }
-
     public function find($id)
     {
         $request = $this->model->findRoleById($id);
         echo json_encode($request, JSON_UNESCAPED_UNICODE);
-        die();
     }
 
     public function update()
@@ -100,20 +105,9 @@ class Roles extends Controllers
             $this->setFAIL($emptyKeys);
             $message = $this->getFAIL();
             echo json_encode($message, JSON_UNESCAPED_UNICODE);
-            die();
         }
 
-        $data = [];
-        $id = "";
-
-        foreach ($requestData as $key => $value) {
-            if ($key != "role_code") {
-                $data[] = $value;
-            } else {
-                $id = $value;
-            }
-        }
-        $request = $this->model->updateRole($id, $data);
+        $request = $this->model->updateRole($requestData);
 
         if ($request) {
             $message = $this->getSUCCESS();
@@ -121,14 +115,12 @@ class Roles extends Controllers
             $message = $this->getERROR();
         }
         echo json_encode($message, JSON_UNESCAPED_UNICODE);
-        die();
     }
 
     public function findAll()
     {
         $request = $this->model->findRoles();
         echo json_encode($request, JSON_UNESCAPED_UNICODE);
-        die();
     }
 
     public function delete($id)
@@ -141,19 +133,6 @@ class Roles extends Controllers
             $message = $this->getERROR();
         }
         echo json_encode($message, JSON_UNESCAPED_UNICODE);
-        die();
-    }
-
-    function emptyKeys($data){
-        $emptyKeys = [];
-
-        foreach ($data as $key => $value) {
-            if (empty($value)) {
-                $emptyKeys[] = $key;
-            }
-        }
-
-        return $emptyKeys;
     }
 
 }

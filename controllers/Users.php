@@ -13,6 +13,51 @@ class Users extends Controllers
         parent::__construct();
     }
 
+    public function users()
+    {
+        $data['page_tag'] = "Cine Colombia - Usuarios";
+        $data['page_title'] = 'Usuarios';
+        $data['page_name'] = "users";
+        $data['page_id'] = 4;
+        $this->views->getView($this, "users", $data);
+    }
+
+    public function save()
+    {
+        $requestData = $_POST;
+
+        $emptyKeys = $this->emptyKeys($requestData);
+
+        if (!empty($emptyKeys)) {
+            $this->setFAIL($emptyKeys);
+            $message = $this->getFAIL();
+            echo json_encode($message, JSON_UNESCAPED_UNICODE);
+            die();
+        }
+
+        $request = $this->model->saveUser($requestData);
+
+        if ($request) {
+            $message = $this->getSUCCESS();
+        } else {
+            $message = $this->getERROR();
+        }
+        echo json_encode($message, JSON_UNESCAPED_UNICODE);
+    }
+
+    function emptyKeys($data)
+    {
+        $emptyKeys = [];
+
+        foreach ($data as $key => $value) {
+            if (empty($value)) {
+                $emptyKeys[] = $key;
+            }
+        }
+
+        return $emptyKeys;
+    }
+
     /**
      * @return array
      */
@@ -45,56 +90,21 @@ class Users extends Controllers
         return $this->ERROR;
     }
 
-    public function users()
-    {
-        $data['page_tag'] = "Cine Colombia - Usuarios";
-        $data['page_title'] = 'Usuarios';
-        $data['page_name'] = "users";
-        $data['page_id'] = 4;
-        $this->views->getView($this, "users", $data);
-    }
-
-    public function save()
-    {
-        $requestData = $_POST;
-
-        $emptyKeys = $this->emptyKeys($requestData);
-
-        if (!empty($emptyKeys)) {
-            $this->setFAIL($emptyKeys);
-            $message = $this->getFAIL();
-            echo json_encode($message, JSON_UNESCAPED_UNICODE);
-            die();
-        }
-
-        $data = [];
-
-        foreach ($requestData as $key => $value) {
-            $data[] = $value;
-        }
-
-        $request = $this->model->saveUser($data);
-
-        if ($request) {
-            $message = $this->getSUCCESS();
-        } else {
-            $message = $this->getERROR();
-        }
-        echo json_encode($message, JSON_UNESCAPED_UNICODE);
-        die();
-    }
-
     public function find($id)
     {
         $request = $this->model->findUserById($id);
         echo json_encode($request, JSON_UNESCAPED_UNICODE);
-        die();
     }
 
     public function update()
     {
         $requestData = $_POST;
 
+        if (empty($requestData['password'])) {
+            $user = $this->model->findUserById($requestData['user_id']);
+            $requestData['password'] = $user['password'];
+        }
+
         $emptyKeys = $this->emptyKeys($requestData);
 
         if (!empty($emptyKeys)) {
@@ -104,17 +114,7 @@ class Users extends Controllers
             die();
         }
 
-        $data = [];
-        $id = "";
-
-        foreach ($requestData as $key => $value) {
-            if ($key != "user_id") {
-                $data[] = $value;
-            } else {
-                $id = $value;
-            }
-        }
-        $request = $this->model->updateUser($id, $data);
+        $request = $this->model->updateUser($requestData);
 
         if ($request) {
             $message = $this->getSUCCESS();
@@ -122,7 +122,6 @@ class Users extends Controllers
             $message = $this->getERROR();
         }
         echo json_encode($message, JSON_UNESCAPED_UNICODE);
-        die();
     }
 
     public function findAll()
@@ -143,18 +142,6 @@ class Users extends Controllers
         }
         echo json_encode($message, JSON_UNESCAPED_UNICODE);
         die();
-    }
-
-    function emptyKeys($data){
-        $emptyKeys = [];
-
-        foreach ($data as $key => $value) {
-            if (empty($value)) {
-                $emptyKeys[] = $key;
-            }
-        }
-
-        return $emptyKeys;
     }
 
 }
