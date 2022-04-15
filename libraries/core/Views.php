@@ -2,7 +2,7 @@
 
 class Views
 {
-    function getView($controller, $view, $data="")
+    function getView($controller, $view, $data = "")
     {
         $controller = get_class($controller);
         if ($controller == "Home") {

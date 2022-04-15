@@ -66,10 +66,10 @@
                             </select>
                         </div>
                         <div class="field">
-                            <label for="status" class="label">
+                            <label for="statusId" class="label">
                                 Estado<span class="alert">*</span>:
                             </label>
-                            <select name="status" id="statusId" class="input">
+                            <select name="statusId" id="statusId" class="input">
                                 <option value="1">Activo</option>
                                 <option value="2">Inactivo</option>
                             </select>
@@ -79,7 +79,7 @@
                         *Todos los campos son obligatorios
                     </span>
                     <div class="form-button">
-                        <button id="btnActionForm" type="submit" class="btn btn-submit" onclick="sendRequest(event)">
+                        <button id="btnActionForm" type="submit" class="btn btn-submit" onclick="sendRequest(e)">
                             Guardar
                         </button>
                     </div>

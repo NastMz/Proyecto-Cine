@@ -6,5 +6,5 @@ class homeModel extends Crud
     {
         parent::__construct();
     }
-    
+
 }
