@@ -36,9 +36,5 @@ function closeDropdown() {
     }
 }
 
-window.onclick = function (event) {
-    if (event.target !== dropdownBtn && event.target !== dropdownImage && event.target !== dropdownImage.parentElement && event.target !== dropdownMenu) {
-        closeDropdown();
-    }
-}
+dropdownBackground.addEventListener('click', closeDropdown);
 

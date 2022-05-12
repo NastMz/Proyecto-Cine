@@ -52,7 +52,7 @@ getModal("modalRoles", $data);
                             <thead>
                             <tr>
                                 <th>
-                                <span id="role_code" class="table-column">
+                                <span id="role_id" class="table-column">
                                     <span class="thead">
                                         ID
                                     </span>

@@ -106,15 +106,68 @@
                         </button>
                         <div class="dropdown-background" id="dropdown-background">
                             <div id="myDropdown" class="dropdown-content">
-                                <a href="<?= base_url() ?>settings">
-                                    <i class="fa fa-cogs" aria-hidden="true"></i> Configuración
-                                </a>
-                                <a href="<?= base_url() ?>profile">
-                                    <i class="fa fa-user" aria-hidden="true"></i> Perfil
-                                </a>
-                                <a href="<?= base_url() ?>logout">
-                                    <i class="fa  fa-sign-out" aria-hidden="true"></i> Cerrar Sesión
-                                </a>
+                                <div class="menu">
+                                    <a href="<?= base_url() ?>settings" class="option">
+                                        <i class="fa fa-cogs" aria-hidden="true"></i> Configuración
+                                    </a>
+                                    <a href="<?= base_url() ?>profile" class="option">
+                                        <i class="fa fa-user" aria-hidden="true"></i> Perfil
+                                    </a>
+                                    <a href="<?= base_url() ?>logout" class="option">
+                                        <i class="fa  fa-sign-out" aria-hidden="true"></i> Cerrar Sesión
+                                    </a>
+                                </div>
+                                <div class="formLogin">
+                                    <div class="close-button">
+                                        <div class="form-title">
+                                            <h5 id="formTitle">Iniciar sesión</h5>
+                                            <p id="formMessage">Entra con tu usuario registrado</p>
+                                        </div>
+                                    </div>
+                                    <div class="form">
+                                        <div class="form-group">
+                                            <form id="formLogin" name="formLogin" method="post">
+                                                <div class="field">
+                                                    <label for="txtEmail" class="label">
+                                                        Usuario / Correo<span class="alert">*</span>:
+                                                    </label>
+                                                    <input type="text" name="txtEmail" id="txtEmail"
+                                                           placeholder="Usuario"
+                                                           class="input"/>
+                                                </div>
+                                                <div class="field">
+                                                    <label for="txtPassword" class="label">
+                                                        Contraseña<span class="alert">*</span>:
+                                                    </label>
+                                                    <input type="text" name="txtPassword" id="txtPassword"
+                                                           placeholder="Contraseña"
+                                                           class="input"/>
+                                                </div>
+                                                <span class="alert">
+                                                    *Todos los campos son obligatorios
+                                            </span>
+                                                <div class="form-button">
+                                                    <button id="btnActionForm" type="submit" class="btn btn-submit"
+                                                            onclick="sendRequest(event)">
+                                                        Guardar
+                                                    </button>
+                                                </div>
+                                                <span>
+                                                    <a href="<?= base_url() ?>recovery" class="account-dropdown-login">
+                                                        ¿Olvidaste tu contraseña? Recupérala aquí
+                                                    </a>
+                                                </span>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="form-footer">
+                                        <span>
+                                            <a href="<?= base_url() ?>register" class="account-dropdown-actions">
+                                                ¿No estás registrado? Regístrate aquí
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

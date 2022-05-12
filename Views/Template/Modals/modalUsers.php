@@ -5,7 +5,7 @@
         <div class="close-button">
             <div class="form-title">
                 <h5 id="formTitle">Nuevo Usuario</h5>
-                <p id="formMessage">Ingresa la informacion del nuevo usuario</p>
+                <p id="formMessage">Ingresa la información del nuevo usuario</p>
             </div>
             <span class="close" onclick="closeModal()">
                 <i class="fa-regular fa-circle-xmark"></i>

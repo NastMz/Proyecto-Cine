@@ -272,6 +272,7 @@ function toggleArrow(event) {
     }
 
     rolesList.sort(sort_by(field, reverse));
+    console
     populateTable();
 }
 
