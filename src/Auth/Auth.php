@@ -5,18 +5,22 @@ declare(strict_types=1);
 namespace Cine\Auth;
 
 use Cine\Http\Session;
+use Cine\Repository\LoginAttemptRepository;
 use Cine\Repository\UserRepository;
 
 /**
- * Session-based authentication with bcrypt password hashes and a small
- * per-session throttle against password guessing.
+ * Session-based authentication with bcrypt password hashes and a
+ * database-backed throttle against password guessing (per account and
+ * per client IP), so it survives dropping the session cookie.
  */
 final class Auth
 {
     private const SESSION_KEY = '_user_id';
-    private const ATTEMPTS_KEY = '_login_attempts';
-    public const MAX_ATTEMPTS = 5;
-    public const LOCK_SECONDS = 60;
+    public const MAX_ACCOUNT_FAILURES = 5;
+    public const MAX_IP_FAILURES = 20;
+    public const WINDOW_MINUTES = 15;
+    public const INVALID_MESSAGE = 'Correo o contraseña incorrectos.';
+    public const LOCKED_MESSAGE = 'Demasiados intentos fallidos. Espera 15 minutos e inténtalo de nuevo.';
     private const DUMMY_HASH = '$2y$12$0oVPLYIrxclijvsobrK89OBfT65UhFLTPik2rB.68Z9ZwmqTk3gYa';
 
     /** @var array<string, mixed>|null|false false = not loaded yet */
@@ -27,46 +31,38 @@ final class Auth
     public function __construct(
         private readonly Session $session,
         private readonly UserRepository $users,
-        private readonly \Closure $clock,
+        private readonly LoginAttemptRepository $attempts,
     ) {
-    }
-
-    public static function create(Session $session, UserRepository $users): self
-    {
-        return new self($session, $users, static fn (): int => time());
     }
 
     /**
      * @return array{ok: bool, error: ?string}
      */
-    public function attempt(string $email, string $password): array
+    public function attempt(string $email, string $password, string $ip): array
     {
-        $now = ($this->clock)();
-        $attempts = $this->session->get(self::ATTEMPTS_KEY, ['count' => 0, 'until' => 0]);
-        if ($attempts['until'] > $now) {
-            return ['ok' => false, 'error' => 'Demasiados intentos. Espera un minuto e inténtalo de nuevo.'];
+        $failures = $this->attempts->recentFailures($email, $ip, self::WINDOW_MINUTES);
+        if ($failures['email'] >= self::MAX_ACCOUNT_FAILURES || $failures['ip'] >= self::MAX_IP_FAILURES) {
+            return ['ok' => false, 'error' => self::LOCKED_MESSAGE];
         }
 
         $row = $this->users->findCredentials($email);
         // Verify against a dummy hash for unknown e-mails so both paths take
         // the same time and do not reveal which accounts exist.
         $hash = $row !== null ? (string) $row['password_hash'] : self::DUMMY_HASH;
-        $valid = password_verify($password, $hash) && $row !== null;
+        $valid = password_verify($password, $hash) && $row !== null && $row['is_active'];
 
-        if (!$valid || !$row['is_active']) {
-            $count = $attempts['count'] + 1;
-            $this->session->set(self::ATTEMPTS_KEY, [
-                'count' => $count >= self::MAX_ATTEMPTS ? 0 : $count,
-                'until' => $count >= self::MAX_ATTEMPTS ? $now + self::LOCK_SECONDS : 0,
-            ]);
+        if (!$valid) {
+            // Same message for unknown, wrong-password and inactive accounts.
+            $this->attempts->recordFailure($email, $ip);
 
-            return ['ok' => false, 'error' => $valid ? 'La cuenta está inactiva.' : 'Correo o contraseña incorrectos.'];
+            return ['ok' => false, 'error' => self::INVALID_MESSAGE];
         }
 
         if (password_needs_rehash((string) $row['password_hash'], PASSWORD_DEFAULT)) {
             $this->users->updatePasswordHash((int) $row['user_id'], password_hash($password, PASSWORD_DEFAULT));
         }
 
+        $this->attempts->clear($email);
         $this->login((int) $row['user_id']);
 
         return ['ok' => true, 'error' => null];
@@ -75,7 +71,6 @@ final class Auth
     public function login(int $userId): void
     {
         $this->session->regenerate();
-        $this->session->forget(self::ATTEMPTS_KEY);
         $this->session->set(self::SESSION_KEY, $userId);
         $this->user = false;
         $this->permissions = null;

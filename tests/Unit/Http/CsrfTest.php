@@ -54,9 +54,35 @@ final class CsrfTest extends TestCase
     public function testPostLoginRedirectOnlyAllowsLocalPaths(): void
     {
         self::assertSame('/mis-boletos', AuthController::safeNext('/mis-boletos'));
-        self::assertSame('/', AuthController::safeNext('https://evil.example'));
-        self::assertSame('/', AuthController::safeNext('//evil.example'));
-        self::assertSame('/', AuthController::safeNext('/\\evil.example'));
+        self::assertSame('/funciones/12?x=1', AuthController::safeNext('/funciones/12?x=1'));
         self::assertSame('/', AuthController::safeNext(''));
+    }
+
+    /**
+     * Regression: "/<TAB>/evil.example" was accepted and browsers strip the
+     * control character, producing a protocol-relative "//evil.example".
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('openRedirects')]
+    public function testPostLoginRedirectRejectsOpenRedirects(string $next): void
+    {
+        self::assertSame('/', AuthController::safeNext($next));
+    }
+
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function openRedirects(): array
+    {
+        return [
+            'tab' => [rawurldecode('%2F%09%2Fevil.example')],
+            'line feed' => [rawurldecode('%2F%0A%2Fevil.example')],
+            'carriage return' => [rawurldecode('%2F%0D%2Fevil.example')],
+            'protocol relative' => ['//evil.example'],
+            'backslash' => ['/\\evil.example'],
+            'absolute https' => ['https://evil.example'],
+            'absolute javascript' => ['javascript:alert(1)'],
+            'space' => ['/ /evil.example'],
+            'no leading slash' => ['evil.example'],
+        ];
     }
 }

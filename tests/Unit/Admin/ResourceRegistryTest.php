@@ -41,6 +41,7 @@ final class ResourceRegistryTest extends TestCase
         self::assertSame(['role_id' => 3, 'permission_id' => 5], $composite->parseKey('3~5'));
         self::assertNull($composite->parseKey('3'));
         self::assertNull($composite->parseKey('3~x'));
+        self::assertNull($composite->parseKey('3~99999999999'));
         self::assertSame(['movie_id' => 7], $registry->get('peliculas')->parseKey('7'));
     }
 

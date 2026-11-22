@@ -27,6 +27,7 @@ final class DbErrorTranslator
         '23502' => 'Falta un dato obligatorio.',
         '23P01' => 'El registro se cruza con otro existente.',
         '22001' => 'Un texto supera la longitud permitida.',
+        '22003' => 'Un número está fuera del rango permitido.',
         '22P02' => 'Un valor no tiene el formato esperado.',
         '22007' => 'La fecha u hora no es válida.',
         '22008' => 'La fecha u hora está fuera de rango.',

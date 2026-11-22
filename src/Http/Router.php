@@ -49,6 +49,12 @@ final class Router
             }
 
             $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+            foreach ($params as $name => $value) {
+                // Ids beyond the PostgreSQL integer range cannot exist: 404.
+                if (self::isIdParam($name) && !Request::isId($value)) {
+                    return ['status' => 404, 'handler' => null, 'params' => []];
+                }
+            }
 
             return ['status' => 200, 'handler' => $route['handler'], 'params' => $params];
         }
@@ -56,12 +62,17 @@ final class Router
         return ['status' => $pathMatched ? 405 : 404, 'handler' => null, 'params' => []];
     }
 
+    private static function isIdParam(string $name): bool
+    {
+        return str_ends_with($name, 'id') || str_ends_with($name, 'Id');
+    }
+
     private static function compile(string $pattern): string
     {
         $regex = preg_replace_callback(
             '/\{([a-z][a-zA-Z0-9]*)\}/',
             static function (array $m): string {
-                $segment = str_ends_with($m[1], 'id') || str_ends_with($m[1], 'Id') ? '\d+' : '[a-z0-9_~-]+';
+                $segment = self::isIdParam($m[1]) ? '\d+' : '[a-z0-9_~-]+';
 
                 return '(?P<' . $m[1] . '>' . $segment . ')';
             },

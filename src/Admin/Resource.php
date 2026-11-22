@@ -80,7 +80,7 @@ final class Resource
         }
         $values = [];
         foreach ($this->keys as $i => $column) {
-            if (!ctype_digit($parts[$i])) {
+            if (!\Cine\Http\Request::isId($parts[$i])) {
                 return null;
             }
             $values[$column] = (int) $parts[$i];

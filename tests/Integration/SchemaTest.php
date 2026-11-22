@@ -13,7 +13,7 @@ final class SchemaTest extends DatabaseTestCase
 {
     public function testAllMigrationsAndSeedsAreRecorded(): void
     {
-        self::assertSame(4, (int) $this->scalar('SELECT count(*) FROM schema_migration'));
+        self::assertSame(5, (int) $this->scalar('SELECT count(*) FROM schema_migration'));
         self::assertSame(2, (int) $this->scalar('SELECT count(*) FROM schema_seed'));
     }
 

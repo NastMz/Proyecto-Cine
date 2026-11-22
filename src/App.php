@@ -17,6 +17,7 @@ use Cine\Http\Request;
 use Cine\Http\Response;
 use Cine\Http\Router;
 use Cine\Http\Session;
+use Cine\Repository\LoginAttemptRepository;
 use Cine\Repository\MovieRepository;
 use Cine\Repository\PurchaseRepository;
 use Cine\Repository\ShowtimeRepository;
@@ -60,7 +61,7 @@ final class App
 
     public function auth(): Auth
     {
-        return $this->auth ??= Auth::create($this->session, $this->users());
+        return $this->auth ??= new Auth($this->session, $this->users(), new LoginAttemptRepository($this->pdo()));
     }
 
     public function users(): UserRepository
@@ -147,7 +148,8 @@ final class App
         }
 
         if ($request->method === 'POST' && !$this->csrf->isValid($request->input(Csrf::FIELD))) {
-            return $this->error(419, 'La sesión expiró', 'Recarga la página e inténtalo de nuevo.');
+            // 403 rather than 419: Apache does not know 419 and would answer 500.
+            return $this->error(403, 'La sesión expiró', 'Recarga la página e inténtalo de nuevo.');
         }
 
         return ($match['handler'])($request, $match['params']);

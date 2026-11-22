@@ -71,7 +71,7 @@ final class BookingController
         if (count($seatIds) > self::MAX_SEATS) {
             return $this->app->redirect($back, 'error', 'Puedes comprar máximo ' . self::MAX_SEATS . ' sillas por compra.');
         }
-        if (!ctype_digit($method)) {
+        if (!Request::isId($method, 32767)) {
             return $this->app->redirect($back, 'error', 'Elige un medio de pago.');
         }
 

@@ -41,13 +41,13 @@ final class Request
      * @param array<string, mixed> $query
      * @param array<string, mixed> $body
      */
-    public static function create(string $method, string $uri, array $body = [], array $query = []): self
+    public static function create(string $method, string $uri, array $body = [], array $query = [], array $server = []): self
     {
         $path = (string) parse_url($uri, PHP_URL_PATH);
         $queryString = (string) parse_url($uri, PHP_URL_QUERY);
         parse_str($queryString, $parsed);
 
-        return new self(strtoupper($method), self::normalizePath($path), $query + $parsed, $body);
+        return new self(strtoupper($method), self::normalizePath($path), $query + $parsed, $body, $server);
     }
 
     public static function normalizePath(string $path): string
@@ -85,7 +85,7 @@ final class Request
 
         $ids = [];
         foreach ($raw as $value) {
-            if (is_scalar($value) && ctype_digit((string) $value) && (int) $value > 0) {
+            if (is_scalar($value) && self::isId((string) $value)) {
                 $ids[] = (int) $value;
             }
         }
@@ -94,11 +94,28 @@ final class Request
     }
 
     /**
+     * True for a positive integer that fits a PostgreSQL `integer` column
+     * (or a smaller `$max`).
+     */
+    public static function isId(string $value, int $max = 2147483647): bool
+    {
+        return preg_match('/^[1-9][0-9]{0,9}$/', $value) === 1 && (int) $value <= $max;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function all(): array
     {
         return $this->body;
+    }
+
+    /** Client address as seen by the web server (no proxy headers trusted). */
+    public function ip(): string
+    {
+        $ip = (string) ($this->server['REMOTE_ADDR'] ?? '');
+
+        return filter_var($ip, FILTER_VALIDATE_IP) !== false ? $ip : '0.0.0.0';
     }
 
     public function isSecure(): bool

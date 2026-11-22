@@ -36,6 +36,17 @@ final class RouterTest extends TestCase
         self::assertSame(404, $this->router->match('GET', "/peliculas/1' OR 1=1")['status']);
     }
 
+    public function testIdsOutsideTheIntegerRangeAreNotFound(): void
+    {
+        self::assertSame(200, $this->router->match('GET', '/peliculas/2147483647')['status']);
+        self::assertSame(404, $this->router->match('GET', '/peliculas/2147483648')['status']);
+        self::assertSame(404, $this->router->match('GET', '/peliculas/99999999999999999999')['status']);
+        self::assertSame(404, $this->router->match('GET', '/peliculas/0')['status']);
+        self::assertTrue(Request::isId('32767', 32767));
+        self::assertFalse(Request::isId('32768', 32767));
+        self::assertFalse(Request::isId('007'));
+    }
+
     public function testSlugPlaceholdersAcceptCompositeKeys(): void
     {
         $match = $this->router->match('GET', '/admin/permisos-rol/3~5/editar');
@@ -58,9 +69,15 @@ final class RouterTest extends TestCase
 
     public function testIntListKeepsOnlyPositiveUniqueIntegers(): void
     {
-        $request = Request::create('POST', '/', ['seats' => ['3', '3', '-1', 'x', '0', '12', ['nested']]]);
+        $request = Request::create('POST', '/', ['seats' => ['3', '3', '-1', 'x', '0', '12', '2147483648', ['nested']]]);
 
         self::assertSame([3, 12], $request->intList('seats'));
         self::assertSame([], Request::create('POST', '/', ['seats' => 'nope'])->intList('seats'));
+    }
+
+    public function testClientIpComesFromRemoteAddrOnly(): void
+    {
+        self::assertSame('10.0.0.7', Request::create('GET', '/', server: ['REMOTE_ADDR' => '10.0.0.7'])->ip());
+        self::assertSame('0.0.0.0', Request::create('GET', '/', server: ['HTTP_X_FORWARDED_FOR' => '1.2.3.4'])->ip());
     }
 }

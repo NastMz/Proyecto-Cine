@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cine\Tests\Integration;
 
 use Cine\App;
+use Cine\Auth\Auth;
 use Cine\Http\Request;
 use Cine\Http\Response;
 use Cine\Http\Session;
@@ -58,8 +59,36 @@ final class SmokeTest extends DatabaseTestCase
             'password' => 'Admin.2026',
         ]));
 
-        self::assertSame(419, $response->status);
+        self::assertSame(403, $response->status);
         self::assertNull($this->session->get('_user_id'));
+    }
+
+    public function testOutOfRangeIdsReturn404InsteadOfDatabaseErrors(): void
+    {
+        $this->post('/ingresar', ['email' => 'admin@butaca.test', 'password' => 'Admin.2026']);
+
+        self::assertSame(404, $this->get('/peliculas/99999999999')->status);
+        self::assertSame(404, $this->get('/funciones/2147483648')->status);
+        self::assertSame(404, $this->get('/compras/99999999999999999999')->status);
+        self::assertSame(404, $this->get('/admin/peliculas/99999999999/editar')->status);
+        self::assertSame(404, $this->post('/admin/peliculas/99999999999/eliminar', [])->status);
+        self::assertSame(404, $this->get('/afiches/99999999999.svg')->status);
+    }
+
+    public function testOutOfRangePurchaseValuesAreRejectedGracefully(): void
+    {
+        $this->post('/ingresar', ['email' => 'andres@butaca.test', 'password' => 'Cliente.2026']);
+        $showtime = $this->freeFutureShowtime();
+        $seat = (string) $this->seatsOf((int) $showtime['hall_id'], 1)[0];
+        $url = '/funciones/' . $showtime['showtime_id'] . '/comprar';
+
+        $method = $this->post($url, ['seats' => [$seat], 'payment_method_id' => '99999']);
+        self::assertSame(303, $method->status);
+        self::assertSame('Elige un medio de pago.', $this->session->get('_flash')['message']);
+
+        $seats = $this->post($url, ['seats' => ['99999999999'], 'payment_method_id' => '1']);
+        self::assertSame(303, $seats->status);
+        self::assertSame('Selecciona al menos una silla.', $this->session->get('_flash')['message']);
     }
 
     public function testProtectedPagesRedirectGuestsToLogin(): void
@@ -77,6 +106,61 @@ final class SmokeTest extends DatabaseTestCase
 
         self::assertSame(422, $response->status);
         self::assertStringContainsString('Correo o contraseña incorrectos', $response->body);
+    }
+
+    public function testInactiveAccountsGetTheGenericMessage(): void
+    {
+        $this->pdo->exec("UPDATE app_user SET is_active = false WHERE email = 'marta@butaca.test'");
+
+        $response = $this->post('/ingresar', ['email' => 'marta@butaca.test', 'password' => 'Cliente.2026']);
+
+        self::assertSame(422, $response->status);
+        self::assertStringContainsString(Auth::INVALID_MESSAGE, $response->body);
+        self::assertStringNotContainsString('inactiva', $response->body);
+        self::assertNull($this->session->get('_user_id'));
+    }
+
+    /**
+     * Regression: the throttle lived in the session, so a client that drops
+     * its cookie got unlimited attempts. Each attempt here uses a brand-new
+     * session (no cookie) and the lock still applies.
+     */
+    public function testAccountIsLockedAfterRepeatedFailuresEvenWithoutCookies(): void
+    {
+        for ($i = 0; $i < Auth::MAX_ACCOUNT_FAILURES; $i++) {
+            $failed = $this->loginFromFreshSession('admin@butaca.test', 'incorrecta', '203.0.113.' . ($i + 1));
+            self::assertStringContainsString(Auth::INVALID_MESSAGE, $failed->body);
+        }
+
+        $locked = $this->loginFromFreshSession('ADMIN@butaca.test', 'Admin.2026', '198.51.100.9');
+        self::assertSame(422, $locked->status);
+        self::assertStringContainsString(Auth::LOCKED_MESSAGE, $locked->body);
+
+        // Other accounts from other addresses are unaffected.
+        self::assertSame(303, $this->loginFromFreshSession('laura@butaca.test', 'Cliente.2026', '198.51.100.9')->status);
+        self::assertSame(1, (int) $this->scalar("SELECT count(DISTINCT email) FROM login_attempt"));
+    }
+
+    public function testClientIpIsLockedAfterFailuresAcrossManyAccounts(): void
+    {
+        $ip = '192.0.2.50';
+        for ($i = 0; $i < Auth::MAX_IP_FAILURES; $i++) {
+            $this->loginFromFreshSession("nadie{$i}@example.test", 'x', $ip);
+        }
+
+        $locked = $this->loginFromFreshSession('laura@butaca.test', 'Cliente.2026', $ip);
+        self::assertStringContainsString(Auth::LOCKED_MESSAGE, $locked->body);
+
+        self::assertSame(303, $this->loginFromFreshSession('laura@butaca.test', 'Cliente.2026', '192.0.2.51')->status);
+    }
+
+    public function testSuccessfulLoginResetsTheAccountCounter(): void
+    {
+        for ($i = 0; $i < Auth::MAX_ACCOUNT_FAILURES - 1; $i++) {
+            $this->loginFromFreshSession('andres@butaca.test', 'incorrecta', '203.0.113.20');
+        }
+        self::assertSame(303, $this->loginFromFreshSession('andres@butaca.test', 'Cliente.2026', '203.0.113.20')->status);
+        self::assertSame(0, (int) $this->scalar("SELECT count(*) FROM login_attempt WHERE email = 'andres@butaca.test'"));
     }
 
     public function testAdminCanBrowseEveryModuleAndCreateRecords(): void
@@ -188,6 +272,19 @@ final class SmokeTest extends DatabaseTestCase
 
         self::assertSame(422, $response->status);
         self::assertStringContainsString('Ya existe una cuenta con ese correo.', $response->body);
+    }
+
+    private function loginFromFreshSession(string $email, string $password, string $ip): Response
+    {
+        $session = Session::inMemory();
+        $app = new App(self::config(), $session, dirname(__DIR__, 2), $this->pdo);
+
+        return $app->handle(Request::create(
+            'POST',
+            '/ingresar',
+            ['email' => $email, 'password' => $password, '_token' => $app->csrf->token()],
+            server: ['REMOTE_ADDR' => $ip],
+        ));
     }
 
     private function get(string $uri): Response

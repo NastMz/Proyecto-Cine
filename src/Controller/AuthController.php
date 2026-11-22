@@ -39,7 +39,7 @@ final class AuthController
     {
         $email = $request->input('email');
         $next = self::safeNext($request->input('next'));
-        $result = $this->app->auth()->attempt($email, $request->input('password'));
+        $result = $this->app->auth()->attempt($email, $request->input('password'), $request->ip());
 
         if (!$result['ok']) {
             return $this->app->page('auth/login', [
@@ -124,11 +124,10 @@ final class AuthController
      */
     public static function safeNext(string $next): string
     {
-        if ($next === '' || !str_starts_with($next, '/') || str_starts_with($next, '//') || str_contains($next, '\\')) {
-            return '/';
-        }
-
-        return $next;
+        // One leading slash followed by printable ASCII only: rejects
+        // "//host", "/\host", absolute URLs and control characters such as
+        // TAB/CR/LF that browsers strip (turning "/<TAB>/host" into "//host").
+        return preg_match('#^/(?![/\\\\])[\x21-\x7E]*$#', $next) === 1 ? $next : '/';
     }
 
     /**
