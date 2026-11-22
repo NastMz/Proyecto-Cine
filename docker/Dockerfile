@@ -31,8 +31,10 @@ RUN a2enmod rewrite headers \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 COPY docker/php.ini "$PHP_INI_DIR/conf.d/zz-cine.ini"
-COPY --chown=www-data:www-data . .
-COPY --from=vendor --chown=www-data:www-data /app/vendor ./vendor
+# Code and dependencies stay owned by root (read-only for the web server);
+# PHP sessions are written to the system temp directory.
+COPY . .
+COPY --from=vendor /app/vendor ./vendor
 RUN rm -rf tests docs phpunit.xml.dist && chmod +x docker/entrypoint.sh bin/console
 EXPOSE 80
 ENTRYPOINT ["docker/entrypoint.sh"]

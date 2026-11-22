@@ -1,3 +1,5 @@
+# Local demo stack: APP_ENV=local loads demo accounts and data.
+# For production set APP_ENV=production (demo seeding is then refused).
 name: cine
 
 services:
@@ -11,7 +13,8 @@ services:
       TZ: America/Bogota
       PGTZ: America/Bogota
     ports:
-      - "${DB_PORT:-8141}:5432"
+      # Loopback only: the database is never exposed to the network.
+      - "127.0.0.1:${DB_PORT:-8141}:5432"
     volumes:
       - cine-db-data:/var/lib/postgresql/data
     networks:
@@ -30,7 +33,7 @@ services:
     image: cine-web:1.0.0
     container_name: cine-web
     environment:
-      APP_ENV: ${APP_ENV:-production}
+      APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
       APP_TIMEZONE: ${APP_TIMEZONE:-America/Bogota}
       APP_DEMO: ${APP_DEMO:-1}

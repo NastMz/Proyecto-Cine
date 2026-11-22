@@ -13,6 +13,12 @@ $root = dirname(__DIR__);
 $config = Config::load($root);
 $command = $argv[1] ?? 'help';
 
+// Seeds create demo accounts with published passwords: never in production.
+if (in_array($command, ['seed', 'demo:schedule'], true) && $config->env === 'production') {
+    fwrite(STDERR, "{$command}: refused because APP_ENV=production (demo data contains public credentials).\n");
+    exit(1);
+}
+
 $connect = static function () use ($config): PDO {
     $attempts = 30;
     while (true) {

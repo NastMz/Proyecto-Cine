@@ -48,9 +48,11 @@ docker compose up -d --build
 ```
 
 - Aplicación: <http://localhost:8140>
-- PostgreSQL: `localhost:8141` (usuario `cine`, base `cine`)
+- PostgreSQL: `127.0.0.1:8141` (usuario `cine`, base `cine`; solo accesible desde el propio equipo)
 
-Al arrancar, el contenedor `cine-web` aplica las migraciones pendientes y, con `APP_DEMO=1` (valor por defecto), carga los datos de demostración y programa funciones para los próximos 7 días. Para cambiar puertos o credenciales copie `.env.example` a `.env`.
+El `compose.yaml` incluido es un **entorno local de demostración** (`APP_ENV=local`, `APP_DEMO=1`): al arrancar, el contenedor `cine-web` aplica las migraciones pendientes, carga los datos de demostración y programa funciones para los próximos 7 días. Para cambiar puertos o credenciales copie `.env.example` a `.env`.
+
+> **Producción:** use `APP_ENV=production` y una contraseña de base de datos propia. En ese modo la aplicación se niega a cargar datos de demostración (`seed` y `demo:schedule` terminan con error y el entrypoint ignora `APP_DEMO`), porque las cuentas de ejemplo tienen contraseñas públicas.
 
 Cuentas de demostración (solo para entornos locales):
 
@@ -104,14 +106,14 @@ src/
   Support/, View/  Formato en español y renderizado de plantillas
 templates/         Vistas PHP (sitio, compra, autenticación, panel)
 database/
-  migrations/      001 esquema · 002 funciones · 003 disparadores · 004 vistas
+  migrations/      001 esquema · 002 funciones · 003 disparadores · 004 vistas · 005 intentos de ingreso
   seeds/           001 datos de referencia · 002 programación y ventas de demo
 bin/console        migrate · seed · demo:schedule · status
 docker/            Dockerfile multi-etapa, Apache y entrypoint
 tests/             Unit/ e Integration/
 ```
 
-Es un MVC propio sin framework (como en la versión original del curso), ahora con autoload PSR-4 de Composer. Seguridad: consultas preparadas en todas partes (los identificadores SQL del CRUD solo salen de la definición de cada módulo), escape de toda salida con `e()`, token CSRF en todos los formularios, contraseñas con `password_hash`, regeneración del id de sesión al ingresar, cookies `HttpOnly`/`SameSite`, cabeceras CSP y credenciales por variables de entorno.
+Es un MVC propio sin framework (como en la versión original del curso), ahora con autoload PSR-4 de Composer. Seguridad: límite de intentos de ingreso guardado en la base de datos (5 fallos por cuenta o 20 por IP en 15 minutos, tabla `login_attempt`), redirecciones posteriores al ingreso restringidas a rutas locales, consultas preparadas en todas partes (los identificadores SQL del CRUD solo salen de la definición de cada módulo), escape de toda salida con `e()`, token CSRF en todos los formularios, contraseñas con `password_hash`, regeneración del id de sesión al ingresar, cookies `HttpOnly`/`SameSite`, cabeceras CSP y credenciales por variables de entorno.
 
 ### Modelo de datos
 
