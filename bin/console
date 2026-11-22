@@ -1,0 +1,77 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Cine\Config;
+use Cine\Database\Database;
+use Cine\Database\Migrator;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$config = Config::load($root);
+$command = $argv[1] ?? 'help';
+
+$connect = static function () use ($config): PDO {
+    $attempts = 30;
+    while (true) {
+        try {
+            return Database::connect($config);
+        } catch (PDOException $e) {
+            if (--$attempts === 0) {
+                throw $e;
+            }
+            fwrite(STDERR, "Waiting for the database...\n");
+            sleep(1);
+        }
+    }
+};
+
+$report = static function (string $label, array $files): void {
+    if ($files === []) {
+        echo "{$label}: nothing to apply.\n";
+
+        return;
+    }
+    foreach ($files as $file) {
+        echo "{$label}: applied {$file}\n";
+    }
+};
+
+switch ($command) {
+    case 'migrate':
+        $report('migrate', (new Migrator($connect(), $root . '/database/migrations'))->run());
+        break;
+
+    case 'seed':
+        $report('seed', (new Migrator($connect(), $root . '/database/seeds', 'schema_seed'))->run());
+        break;
+
+    case 'demo:schedule':
+        // Keeps a rolling week of demo showtimes (idempotent).
+        $count = $connect()->query('SELECT fn_demo_schedule(CURRENT_DATE, 7)')->fetchColumn();
+        echo "demo:schedule: {$count} new showtimes.\n";
+        break;
+
+    case 'status':
+        $pdo = $connect();
+        foreach (['migrations' => ['/database/migrations', 'schema_migration'], 'seeds' => ['/database/seeds', 'schema_seed']] as $label => [$dir, $table]) {
+            $migrator = new Migrator($pdo, $root . $dir, $table);
+            $applied = $migrator->applied();
+            echo "{$label}: " . count($applied) . ' applied, ' . count($migrator->pending($applied)) . " pending\n";
+        }
+        break;
+
+    default:
+        echo <<<TXT
+Usage: php bin/console <command>
+
+  migrate         Apply pending SQL migrations (database/migrations)
+  seed            Apply pending seed files (database/seeds)
+  demo:schedule   Add demo showtimes for the next 7 days
+  status          Show applied / pending files
+
+TXT;
+        exit($command === 'help' ? 0 : 1);
+}

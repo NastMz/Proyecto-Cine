@@ -1,0 +1,76 @@
+name: cine
+
+services:
+  db:
+    image: postgres:16.6-alpine
+    container_name: cine-db
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-cine}
+      POSTGRES_USER: ${DB_USERNAME:-cine}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-cine-local-only}
+      TZ: America/Bogota
+      PGTZ: America/Bogota
+    ports:
+      - "${DB_PORT:-8141}:5432"
+    volumes:
+      - cine-db-data:/var/lib/postgresql/data
+    networks:
+      - cine-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: runtime
+    image: cine-web:1.0.0
+    container_name: cine-web
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-0}
+      APP_TIMEZONE: ${APP_TIMEZONE:-America/Bogota}
+      APP_DEMO: ${APP_DEMO:-1}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-cine}
+      DB_USERNAME: ${DB_USERNAME:-cine}
+      DB_PASSWORD: ${DB_PASSWORD:-cine-local-only}
+    ports:
+      - "${WEB_PORT:-8140}:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - cine-net
+
+  # One-off test runner: docker compose --profile test run --rm tests
+  tests:
+    profiles: ["test"]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: test
+    image: cine-tests:1.0.0
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-cine}
+      DB_PASSWORD: ${DB_PASSWORD:-cine-local-only}
+      TEST_DB_NAME: cine_test
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - cine-net
+
+volumes:
+  cine-db-data:
+    name: cine-db-data
+
+networks:
+  cine-net:
+    name: cine-net
