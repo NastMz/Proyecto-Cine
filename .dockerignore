@@ -1,0 +1,8 @@
+.git
+.github
+vendor
+docs
+.env
+.phpunit.cache
+.idea
+.vscode

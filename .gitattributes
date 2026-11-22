@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.jpg binary
+docker/*.sh text eol=lf
+bin/console text eol=lf

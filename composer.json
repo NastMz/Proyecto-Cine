@@ -1,0 +1,45 @@
+{
+    "name": "nastmz/proyecto-cine",
+    "description": "Butaca: sistema de cartelera, venta de boletos y administración para un cine (proyecto final de Bases de Datos).",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {"name": "Kevin Martinez"}
+    ],
+    "require": {
+        "php": ">=8.3",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "12.5.45"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cine\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cine\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:unit": "phpunit --testsuite unit",
+        "migrate": "php bin/console migrate",
+        "seed": "php bin/console seed"
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.3.0"
+        }
+    },
+    "minimum-stability": "stable"
+}
